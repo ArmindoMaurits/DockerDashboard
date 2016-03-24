@@ -6,7 +6,6 @@
     "jquery": "2.1.4",
     "jquery-validation": "1.14.0",
     "jquery-validation-unobtrusive": "3.2.4",
-    "DataTables": "~1.10.11",
-    "json3": "3.3.2"
+    "DataTables": "~1.10.11"
   }
 }

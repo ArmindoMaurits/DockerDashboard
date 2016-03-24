@@ -10,7 +10,6 @@
             $.getJSON(
                 '/data/containers.json',
                 function (data) {
-                    console.log(data);
                     postJsonToController(data);
                 }
             );
@@ -22,19 +21,15 @@
         });
 
         function postJsonToController(data) {
+            var containers = JSON.stringify(data);
+
             $.ajax({
                 url: '@Url.Action("postToGetContainers", "Home")',
-                data: JSON.stringify(data),
+                data: "containers=" + containers,
                 type: 'POST',
                 datatype: 'json',
                 contentType: 'application/json',
-                traditional: true,
-                success: function () {
-                    alert("Posted Okk")
-                },
-                error: function () {
-                    alert("Could not post JSON")
-                }
+                traditional: true
             });
         }
     </script>

@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
 using DockerTestAma.Models;
+using Newtonsoft.Json;
 
 namespace DockerTestAma.Controllers
 {
@@ -15,13 +14,17 @@ namespace DockerTestAma.Controllers
             return View();
         }
 
-        public string postToGetContainers(Container[] containerArray)
+        [HttpPost]
+        public JsonResult postToGetContainers(String containers)
         {
-            List<Container> containers = getContainers(containerArray);
-            return "posted OK";
+            string output = JsonConvert.SerializeObject(containers);
+            //List<Container> containerList = getContainers(containers);
+            
+
+            return Json("posted OK");
         }
 
-        private List<Container> getContainers(Container[] containerArray)
+        private List<Container> getContainers(string[] containerArray)
         {
             List<Container> containerList = new List<Container>();
             String url = "http://amaurits.nl/get/containers.json";
