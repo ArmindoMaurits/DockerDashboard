@@ -15,13 +15,11 @@ namespace DockerTestAma.Controllers
         }
 
         [HttpPost]
-        public JsonResult postToGetContainers(String containers)
+        public JsonResult postToGetContainers([FromBody]Object containers)
         {
-            string output = JsonConvert.SerializeObject(containers);
             //List<Container> containerList = getContainers(containers);
-            
 
-            return Json("posted OK");
+            return Json("OK");
         }
 
         private List<Container> getContainers(string[] containerArray)

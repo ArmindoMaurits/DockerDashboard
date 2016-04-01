@@ -20,16 +20,19 @@
 
         });
 
-        function postJsonToController(data) {
-            var containers = JSON.stringify(data);
+        function postJsonToController(foundData) {
 
             $.ajax({
                 url: '@Url.Action("postToGetContainers", "Home")',
-                data: "containers=" + containers,
+                data: JSON.stringify(foundData),
                 type: 'POST',
+                contentType: "application/json; charset=utf-8",
                 datatype: 'json',
-                contentType: 'application/json',
-                traditional: true
+                success: function (data) {
+                },
+                fail: function (data) {
+
+                }
             });
         }
     </script>
