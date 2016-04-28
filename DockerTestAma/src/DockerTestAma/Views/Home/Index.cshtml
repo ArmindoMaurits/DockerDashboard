@@ -7,34 +7,11 @@
         $(document).ready(function () {
             var myTable = $('#myTable');
 
-            $.getJSON(
-                '/data/containers.json',
-                function (data) {
-                    postJsonToController(data);
-                }
-            );
-
             myTable.DataTable({
 			    "order": [[ 1, "desc" ]]
             });
 
         });
-
-        function postJsonToController(foundData) {
-
-            $.ajax({
-                url: '@Url.Action("postToGetContainers", "Home")',
-                data: JSON.stringify(foundData),
-                type: 'POST',
-                contentType: "application/json; charset=utf-8",
-                datatype: 'json',
-                success: function (data) {
-                },
-                fail: function (data) {
-
-                }
-            });
-        }
     </script>
 }
 
