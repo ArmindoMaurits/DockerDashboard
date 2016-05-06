@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DockerTestAma.Models
-{
+namespace DockerTestAma.Models{
 
-    public class Container
-    {
+    public class Container{
         public int id { get; set; }
         public string name { get; set; }
         public DateTime creationDate { get; set; }

@@ -4,6 +4,8 @@ using Microsoft.AspNet.Mvc;
 using DockerTestAma.Models;
 using System.IO;
 using System.Net;
+using Newtonsoft.Json;
+using System.Data;
 
 namespace DockerTestAma.Controllers
 {
@@ -19,44 +21,46 @@ namespace DockerTestAma.Controllers
         private List<Container> getContainers()
         {
             List<Container> containerList = new List<Container>();
-            String url = "http://amaurits.nl/get/containers.json";
-            Console.WriteLine("url: " + url);
-            string response = GetHtmlPage(url);
-            Console.WriteLine("response: " + response);
-
+            Uri uri = new Uri(@"http://amaurits.nl/get/containers.json");
+            
+            string response = getHtmlPage(uri);
             //TODO: Parse json
+            List<Container> jsonParsed = parseJson(response);
+            
             return containerList;
         }
 
         private List<Image> getImages()
         {
             List<Image> imageList = new List<Image>();
-            String url = "http://amaurits.nl/get/images.json";
+            Uri uri = new Uri(@"http://amaurits.nl/get/images.json");
 
-            string response = GetHtmlPage(url);
+            string response = getHtmlPage(uri);
             return imageList;
         }
 
-        static string GetHtmlPage(string strURL)
+        static string getHtmlPage(Uri uri)
         {
-            String strResult;
-            WebResponse objResponse;
+            WebRequest webRequest = WebRequest.Create(uri);
+            WebResponse response = webRequest.GetResponse();
+            StreamReader streamReader = new StreamReader(response.GetResponseStream());
+            string responseData = streamReader.ReadToEnd();
+            streamReader.Close();
 
-            WebRequest objRequest = HttpWebRequest.Create(strURL);
-            objResponse = objRequest.GetResponse();
-            using (StreamReader sr = new StreamReader(objResponse.GetResponseStream()))
-            {
-                strResult = sr.ReadToEnd();
-                sr.Close();
-            }
-            return strResult;
+            Console.WriteLine(responseData);
+
+            return responseData;
         }
-
-        static string parseJson(string data)
+        
+        static List<Container> parseJson(string responseData)
         {
-            string json = "";
+            List<Container> containers = new List<Container>();
 
-            return json;
+            var outObject = JsonConvert.DeserializeObject<RootObject>(responseData);
+            containers = outObject.containers;
+
+            return containers;
         }
+        
     }
 }
