@@ -2,29 +2,29 @@
     ViewData["Title"] = "Dashboard";
 }
 
-@section scripts{ 
-    <script>
-        $(document).ready(function () {
-            var myTable = $('#myTable');
+@section scripts{
+<script>
+    $(document).ready(function () {
+        var myTable = $('#myTable');
 
-            myTable.DataTable({
-			    "order": [[ 1, "desc" ]]
-            });
-
+        myTable.DataTable({
+            "order": [[1, "desc"]]
         });
-    </script>
+
+    });
+</script>
 }
 
 @section styles{
-    <style>
-        .glyphicon-dy {
-            padding-right: 15px;
-        }
+<style>
+    .glyphicon-dy {
+        padding-right: 15px;
+    }
 
-        .paddingLeft10{
-            padding-left: 10px;
-        }
-    </style>
+    .paddingLeft10{
+        padding-left: 10px;
+    }
+</style>
 }
 
 <div class="row">

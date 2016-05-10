@@ -7,31 +7,26 @@ using System.Net;
 using Newtonsoft.Json;
 using System.Data;
 
-namespace DockerTestAma.Controllers
-{
-    public class HomeController : Controller
-    {
-        public IActionResult Index()
-        {
+namespace DockerTestAma.Controllers {
+    public class HomeController : Controller {
+        public IActionResult Index() {
             List<Container> containers = getContainers();
-            
+
             return View();
         }
 
-        private List<Container> getContainers()
-        {
+        private List<Container> getContainers() {
             List<Container> containerList = new List<Container>();
             Uri uri = new Uri(@"http://amaurits.nl/get/containers.json");
-            
+
             string response = getHtmlPage(uri);
-            //TODO: Parse json
-            List<Container> jsonParsed = parseJson(response);
-            
+
+            containerList = parseContainersJson(response);
+
             return containerList;
         }
 
-        private List<Image> getImages()
-        {
+        private List<Image> getImages() {
             List<Image> imageList = new List<Image>();
             Uri uri = new Uri(@"http://amaurits.nl/get/images.json");
 
@@ -39,28 +34,23 @@ namespace DockerTestAma.Controllers
             return imageList;
         }
 
-        static string getHtmlPage(Uri uri)
-        {
+        static string getHtmlPage(Uri uri) {
             WebRequest webRequest = WebRequest.Create(uri);
             WebResponse response = webRequest.GetResponse();
             StreamReader streamReader = new StreamReader(response.GetResponseStream());
             string responseData = streamReader.ReadToEnd();
             streamReader.Close();
 
-            Console.WriteLine(responseData);
-
             return responseData;
         }
-        
-        static List<Container> parseJson(string responseData)
-        {
+
+        static List<Container> parseContainersJson(string responseData) {
             List<Container> containers = new List<Container>();
 
-            var outObject = JsonConvert.DeserializeObject<RootObject>(responseData);
-            containers = outObject.containers;
+            containers = JsonConvert.DeserializeObject<List<Container>>(responseData);
 
             return containers;
         }
-        
+
     }
 }
