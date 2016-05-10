@@ -7,7 +7,18 @@
     $(document).ready(function () {
         var myTable = $('#myTable');
 
+        @{
+            foreach(Container container in Model) {
+                @:$('#myTable > tbody:last-child').append('<tr><td>@container.name</td><td>@container.state</td><td>tempState</td><td><span class="glyphicon glyphicon-dy glyphicon-play"></span><span class="glyphicon glyphicon-dy glyphicon-off"></span><span class="glyphicon glyphicon-dy glyphicon-repeat"></span><span class="glyphicon glyphicon-dy glyphicon-cog" data-toggle="modal" data-target="#myModal"></span><span class="glyphicon glyphicon-dy glyphicon-export"></span></td></tr>');
+            }
+        }
+
         myTable.DataTable({
+            "aoColumns": [ 
+                   { "bSortable": true },
+                   { "bSortable": true },
+                   { "bSortable": false },
+                   { "bSortable": false }],
             "order": [[1, "desc"]]
         });
 
@@ -39,6 +50,7 @@
                 </tr>
             </thead>
             <tbody>
+                <!-- 
                 <tr>
                     <td>
                         DrupalThomas
@@ -111,6 +123,7 @@
                         <span class="glyphicon glyphicon-dy glyphicon-export"></span>
                     </td>
                 </tr>
+                    -->
             </tbody>
         </table>
     </div>

@@ -12,7 +12,7 @@ namespace DockerTestAma.Controllers {
         public IActionResult Index() {
             List<Container> containers = getContainers();
 
-            return View();
+            return View(containers);
         }
 
         private List<Container> getContainers() {
