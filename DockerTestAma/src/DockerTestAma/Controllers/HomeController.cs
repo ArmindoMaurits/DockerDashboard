@@ -11,7 +11,6 @@ namespace DockerTestAma.Controllers {
     public class HomeController : Controller {
         public IActionResult Index() {
             List<Container> containers = GetContainers();
-            List<Image> imageList = GetImages();
 
             return View(containers);
         }
@@ -21,26 +20,47 @@ namespace DockerTestAma.Controllers {
             Uri uri = new Uri(@"http://amaurits.nl/get/containers.json");
 
             string response = GetHtmlPage(uri);
-
             containerList = ParseContainersJson(response);
 
             return containerList;
         }
 
         private List<Image> GetImages() {
-            List<Image> imageList = new List<Image>();
+            List<Image> imageList;
             Uri uri = new Uri(@"http://amaurits.nl/get/images.json");
 
             string response = GetHtmlPage(uri);
+
+            imageList = ParseImagesJson(response);
             return imageList;
         }
 
+        private List<Image> ParseImagesJson(string response) {
+            List<Image> images;
+            try {
+                images = JsonConvert.DeserializeObject<List<Image>>(response);
+            } catch (Exception) {
+                throw;
+            }
+            
+            return images;
+        }
+
         static string GetHtmlPage(Uri uri) {
-            WebRequest webRequest = WebRequest.Create(uri);
-            WebResponse response = webRequest.GetResponse();
-            StreamReader streamReader = new StreamReader(response.GetResponseStream());
-            string responseData = streamReader.ReadToEnd();
-            streamReader.Close();
+            string responseData = "";
+
+            try {
+                WebRequest webRequest = WebRequest.Create(uri);
+                WebResponse response = webRequest.GetResponse();
+
+                using (StreamReader streamReader = new StreamReader(response.GetResponseStream())) {
+                    responseData = streamReader.ReadToEnd();
+                }
+
+            } catch (Exception) {
+                throw;
+            }
+
 
             return responseData;
         }
@@ -48,8 +68,12 @@ namespace DockerTestAma.Controllers {
         static List<Container> ParseContainersJson(string responseData) {
             List<Container> containers;
 
-            containers = JsonConvert.DeserializeObject<List<Container>>(responseData);
-
+            try {
+                containers = JsonConvert.DeserializeObject<List<Container>>(responseData);
+            } catch (Exception) {
+                throw;
+            }
+            
             return containers;
         }
 
