@@ -81,7 +81,7 @@ namespace DockerTestAma
                              .Database.Migrate();
                     }
                 }
-                catch { }
+                catch(Exception) { throw; }
             }
 
             app.UseIISPlatformHandler(options => options.AuthenticationDescriptions.Clear());

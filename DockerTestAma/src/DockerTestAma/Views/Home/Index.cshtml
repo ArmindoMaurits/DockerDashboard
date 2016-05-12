@@ -9,7 +9,7 @@
 
         @{
             foreach(Container container in Model) {
-                @:$('#myTable > tbody:last-child').append('<tr><td>@container.name</td><td>@container.state</td><td>tempState</td><td><span class="glyphicon glyphicon-dy glyphicon-play"></span><span class="glyphicon glyphicon-dy glyphicon-off"></span><span class="glyphicon glyphicon-dy glyphicon-repeat"></span><span class="glyphicon glyphicon-dy glyphicon-cog" data-toggle="modal" data-target="#myModal"></span><span class="glyphicon glyphicon-dy glyphicon-export"></span></td></tr>');
+                @:$('#myTable > tbody:last-child').append('<tr><td>@container.Name</td><td>@container.State</td><td>tempState</td><td><span class="glyphicon glyphicon-dy glyphicon-play"></span><span class="glyphicon glyphicon-dy glyphicon-off"></span><span class="glyphicon glyphicon-dy glyphicon-repeat"></span><span class="glyphicon glyphicon-dy glyphicon-cog" data-toggle="modal" data-target="#myModal"></span><span class="glyphicon glyphicon-dy glyphicon-export"></span></td></tr>');
             }
         }
 
