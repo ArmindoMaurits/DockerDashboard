@@ -18,6 +18,7 @@ namespace DockerTestAma.Controllers {
         private List<Container> GetContainers() {
             List<Container> containerList;
             Uri uri = new Uri(@"http://amaurits.nl/get/containers.json");
+            //Uri uri = new Uri(@"http://thomasmaurer.nl/docker/containers/get");
 
             string response = GetHtmlPage(uri);
             containerList = ParseContainersJson(response);

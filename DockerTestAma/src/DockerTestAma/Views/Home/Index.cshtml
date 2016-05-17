@@ -9,19 +9,58 @@
 
         @{
             foreach(Container container in Model) {
-                @:$('#myTable > tbody:last-child').append('<tr><td>@container.Name</td><td>@container.State</td><td>tempState</td><td><span class="glyphicon glyphicon-dy glyphicon-play"></span><span class="glyphicon glyphicon-dy glyphicon-off"></span><span class="glyphicon glyphicon-dy glyphicon-repeat"></span><span class="glyphicon glyphicon-dy glyphicon-cog" data-toggle="modal" data-target="#myModal"></span><span class="glyphicon glyphicon-dy glyphicon-export"></span></td></tr>');
+                @:$('#myTable > tbody:last-child').append('<tr><td>@container.Name</td><td>@container.State</td><td>tempState</td><td><span class="glyphicon glyphicon-dy glyphicon-play" data-toggle="tooltip" title="Start a container"></span><span class="glyphicon glyphicon-dy glyphicon-off" data-toggle="tooltip" title="Stop a container"></span><span class="glyphicon glyphicon-dy glyphicon-repeat" data-toggle="tooltip" title="Restart a container"></span><span class="glyphicon glyphicon-dy glyphicon-cog edit" data-toggle="tooltip" title="Edit a container"></span><span class="glyphicon glyphicon-dy glyphicon-export" data-toggle="tooltip" title="Move a container"></span></td></tr>');
             }
         }
 
-        myTable.DataTable({
+        var myTableDataTable = myTable.DataTable({
             "aoColumns": [ 
                    { "bSortable": true },
                    { "bSortable": true },
                    { "bSortable": false },
-                   { "bSortable": false }],
+                   { "bSortable": false }
+            ],
             "order": [[1, "desc"]]
         });
 
+        $('.glyphicon-play').on('click', function(){
+            //Start container
+            alert("Start container");
+        });
+
+        $('.glyphicon-off').on('click', function () {
+            //Stop container
+            alert("Stop container");
+        });
+
+        $('.glyphicon-repeat').on('click', function () {
+            //Restart container
+            alert("Restart container");
+        });
+
+        $('.glyphicon-cog').on('click', function () {
+            //Edit container
+            $('#myModal').modal('show');
+        });
+
+        $('.glyphicon-export').on('click', function () {
+            //Move container
+            alert("Move container");
+        });
+
+        $('#saveContainer').on('click', function () {
+            //Save container
+            alert("Saved container, will close this window now.");
+        });
+
+        $('#myTable tbody').on('click', 'span', function () {
+            var data = myTableDataTable.row($(this).parents('tr')).data();
+            var containerName = data[0];
+            var containerState = data[1];
+            $("#containerName").val(containerName);
+            $("#containerState").val(containerState);
+        });
+        
     });
 </script>
 }
@@ -30,6 +69,7 @@
 <style>
     .glyphicon-dy {
         padding-right: 15px;
+        cursor: pointer;
     }
 
     .paddingLeft10{
@@ -50,80 +90,6 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- 
-                <tr>
-                    <td>
-                        DrupalThomas
-                    </td>
-                    <td>
-                        Running
-                    </td>
-                    <td>
-                        Deployed 2 minutes ago.
-                    </td>
-                    <td>
-                        <span class="glyphicon glyphicon-dy glyphicon-play"></span>
-                        <span class="glyphicon glyphicon-dy glyphicon-off"></span>
-                        <span class="glyphicon glyphicon-dy glyphicon-repeat"></span>
-                        <span class="glyphicon glyphicon-dy glyphicon-cog" data-toggle="modal" data-target="#myModal"></span>
-                        <span class="glyphicon glyphicon-dy glyphicon-export"></span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        SQLPHP
-                    </td>
-                    <td>
-                        Running
-                    </td>
-                    <td>
-                        Deployed 5 hours ago.
-                    </td>
-                    <td>
-                        <span class="glyphicon glyphicon-dy glyphicon-play"></span>
-                        <span class="glyphicon glyphicon-dy glyphicon-off"></span>
-                        <span class="glyphicon glyphicon-dy glyphicon-repeat"></span>
-                        <span class="glyphicon glyphicon-dy glyphicon-cog" data-toggle="modal" data-target="#myModal"></span>
-                        <span class="glyphicon glyphicon-dy glyphicon-export"></span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        WordPressHRO
-                    </td>
-                    <td>
-                        Halted
-                    </td>
-                    <td>
-                        Exitted with code 5.
-                    </td>
-                    <td>
-                        <span class="glyphicon glyphicon-dy glyphicon-play"></span>
-                        <span class="glyphicon glyphicon-dy glyphicon-off"></span>
-                        <span class="glyphicon glyphicon-dy glyphicon-repeat"></span>
-                        <span class="glyphicon glyphicon-dy glyphicon-cog" data-toggle="modal" data-target="#myModal"></span>
-                        <span class="glyphicon glyphicon-dy glyphicon-export"></span>
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        TestserverUbuntu15.10
-                    </td>
-                    <td>
-                        Stopped
-                    </td>
-                    <td>
-                        Stopped manually 3 hours ago.
-                    </td>
-                    <td>
-                        <span class="glyphicon glyphicon-dy glyphicon-play"></span>
-                        <span class="glyphicon glyphicon-dy glyphicon-off"></span>
-                        <span class="glyphicon glyphicon-dy glyphicon-repeat"></span>
-                        <span class="glyphicon glyphicon-dy glyphicon-cog" data-toggle="modal" data-target="#myModal"></span>
-                        <span class="glyphicon glyphicon-dy glyphicon-export"></span>
-                    </td>
-                </tr>
-                    -->
             </tbody>
         </table>
     </div>
@@ -140,6 +106,26 @@
             </div>
             <div class="modal-body">
                 <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>Container name:</label>
+                            <input type="text" class="form-control" id="containerName">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label>Container description:</label>
+                            <input type="text" class="form-control" id="containerDescription">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-offset-6 col-sm-6">
+                        <label>Container state:</label>
+                        <input type="text" class="form-control" disabled="disabled" id="containerState">
+                    </div>
+                </div>
+                <div class="row" style="margin-top: 10px;">
                     <div class="col-sm-12">
                         <div class="form-group">
                             <label>
@@ -151,50 +137,10 @@
                         </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label>Container name:</label>
-                            <input type="text" class="form-control">
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label>Container name:</label>
-                            <input type="text" class="form-control">
-                        </div>
-                    </div>
-
-                </div>
-                <div class="row">
-                    <div class="col-sm-6">
-                        <div class="form-group">
-                            <label>Exit code:</label>
-                            <select class="form-control">
-                                <option>
-                                    Code 1
-                                </option>
-                                <option>
-                                    Code 2
-                                </option>
-                                <option>
-                                    Code 5
-                                </option>
-                                <option>
-                                    Code 10
-                                </option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <label>Action: </label>
-                        <input type="text" class="form-control" placeholder="action for exitcode">
-                    </div>
-                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Save</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="saveContainer">Save</button>
             </div>
         </div>
 
