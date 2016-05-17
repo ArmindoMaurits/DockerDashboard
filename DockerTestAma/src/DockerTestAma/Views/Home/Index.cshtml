@@ -3,79 +3,79 @@
 }
 
 @section scripts{
-<script>
-    $(document).ready(function () {
-        var myTable = $('#myTable');
+    <script>
+        $(document).ready(function () {
+            var myTable = $('#myTable');
 
-        @{
-            foreach(Container container in Model) {
-                @:$('#myTable > tbody:last-child').append('<tr><td>@container.Name</td><td>@container.State</td><td>tempState</td><td><span class="glyphicon glyphicon-dy glyphicon-play" data-toggle="tooltip" title="Start a container"></span><span class="glyphicon glyphicon-dy glyphicon-off" data-toggle="tooltip" title="Stop a container"></span><span class="glyphicon glyphicon-dy glyphicon-repeat" data-toggle="tooltip" title="Restart a container"></span><span class="glyphicon glyphicon-dy glyphicon-cog edit" data-toggle="tooltip" title="Edit a container"></span><span class="glyphicon glyphicon-dy glyphicon-export" data-toggle="tooltip" title="Move a container"></span></td></tr>');
+            @{
+                foreach(Container container in Model) {
+                    @:$('#myTable > tbody:last-child').append('<tr><td>@container.Name</td><td>@container.State</td><td>tempState</td><td><span class="glyphicon glyphicon-dy glyphicon-play" data-toggle="tooltip" title="Start a container"></span><span class="glyphicon glyphicon-dy glyphicon-off" data-toggle="tooltip" title="Stop a container"></span><span class="glyphicon glyphicon-dy glyphicon-repeat" data-toggle="tooltip" title="Restart a container"></span><span class="glyphicon glyphicon-dy glyphicon-cog edit" data-toggle="tooltip" title="Edit a container"></span><span class="glyphicon glyphicon-dy glyphicon-export" data-toggle="tooltip" title="Move a container"></span></td></tr>');
+                }
             }
-        }
 
-        var myTableDataTable = myTable.DataTable({
-            "aoColumns": [ 
-                   { "bSortable": true },
-                   { "bSortable": true },
-                   { "bSortable": false },
-                   { "bSortable": false }
-            ],
-            "order": [[1, "desc"]]
-        });
+            var myTableDataTable = myTable.DataTable({
+                "aoColumns": [
+                       { "bSortable": true },
+                       { "bSortable": true },
+                       { "bSortable": false },
+                       { "bSortable": false }
+                ],
+                "order": [[1, "desc"]]
+            });
 
-        $('.glyphicon-play').on('click', function(){
-            //Start container
-            alert("Start container");
-        });
+            $('.glyphicon-play').click(function () {
+                //Start container
+                alert("Start container");
+            });
 
-        $('.glyphicon-off').on('click', function () {
-            //Stop container
-            alert("Stop container");
-        });
+            $('.glyphicon-off').click(function () {
+                //Stop container
+                alert("Stop container");
+            });
 
-        $('.glyphicon-repeat').on('click', function () {
-            //Restart container
-            alert("Restart container");
-        });
+            $('.glyphicon-repeat').click(function () {
+                //Restart container
+                alert("Restart container");
+            });
 
-        $('.glyphicon-cog').on('click', function () {
-            //Edit container
-            $('#myModal').modal('show');
-        });
+            $('.glyphicon-cog').click(function () {
+                //Edit container
+                $('#myModal').modal('show');
+            });
 
-        $('.glyphicon-export').on('click', function () {
-            //Move container
-            alert("Move container");
-        });
+            $('.glyphicon-export').click(function () {
+                //Move container
+                alert("Move container");
+            });
 
-        $('#saveContainer').on('click', function () {
-            //Save container
-            alert("Saved container, will close this window now.");
-        });
+            $('#saveContainer').click(function () {
+                //Save container
+                alert("Saved container, will close this window now.");
+            });
 
-        $('#myTable tbody').on('click', 'span', function () {
-            var data = myTableDataTable.row($(this).parents('tr')).data();
-            var containerName = data[0];
-            var containerState = data[1];
-            $("#containerName").val(containerName);
-            $("#containerState").val(containerState);
+            $('#myTable tbody span').click(function () {
+                var data = myTableDataTable.row($(this).parents('tr')).data();
+                var containerName = data[0];
+                var containerState = data[1];
+                $("#containerName").val(containerName);
+                $("#containerState").val(containerState);
+            });
+
         });
-        
-    });
-</script>
+    </script>
 }
 
 @section styles{
-<style>
-    .glyphicon-dy {
-        padding-right: 15px;
-        cursor: pointer;
-    }
+    <style>
+        .glyphicon-dy {
+            padding-right: 15px;
+            cursor: pointer;
+        }
 
-    .paddingLeft10{
-        padding-left: 10px;
-    }
-</style>
+        .paddingLeft10{
+            padding-left: 10px;
+        }
+    </style>
 }
 
 <div class="row">
@@ -89,8 +89,7 @@
                     <th>Actions</th>
                 </tr>
             </thead>
-            <tbody>
-            </tbody>
+            <tbody></tbody>
         </table>
     </div>
 </div>

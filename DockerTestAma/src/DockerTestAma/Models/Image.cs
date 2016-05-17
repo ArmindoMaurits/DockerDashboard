@@ -1,7 +1,9 @@
 ﻿using System;
 
-namespace DockerTestAma.Models {
-    public class Image {
+namespace DockerTestAma.Models
+{
+    public class Image
+    {
         public string id { get; set; }
         public string name { get; set; }
         public string repository { get; set; }
