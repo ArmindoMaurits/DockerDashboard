@@ -40,6 +40,12 @@
 
             $('.glyphicon-cog').click(function () {
                 //Edit container
+                var data = myTableDataTable.row($(this).parents('tr')).data();
+                var containerName = data[0];
+                var containerState = data[1];
+                $("#containerName").val(containerName);
+                $("#containerState").val(containerState);
+
                 $('#myModal').modal('show');
             });
 
@@ -51,14 +57,6 @@
             $('#saveContainer').click(function () {
                 //Save container
                 alert("Saved container, will close this window now.");
-            });
-
-            $('#myTable tbody span').click(function () {
-                var data = myTableDataTable.row($(this).parents('tr')).data();
-                var containerName = data[0];
-                var containerState = data[1];
-                $("#containerName").val(containerName);
-                $("#containerState").val(containerState);
             });
 
         });
