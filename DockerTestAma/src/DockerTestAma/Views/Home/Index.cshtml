@@ -9,40 +9,67 @@
 
             @{
                 foreach(Container container in Model) {
-                    @:$('#myTable > tbody:last-child').append('<tr><td>@container.Name</td><td>@container.State</td><td>tempState</td><td><span class="glyphicon glyphicon-dy glyphicon-play" data-toggle="tooltip" title="Start a container"></span><span class="glyphicon glyphicon-dy glyphicon-off" data-toggle="tooltip" title="Stop a container"></span><span class="glyphicon glyphicon-dy glyphicon-repeat" data-toggle="tooltip" title="Restart a container"></span><span class="glyphicon glyphicon-dy glyphicon-cog edit" data-toggle="tooltip" title="Edit a container"></span><span class="glyphicon glyphicon-dy glyphicon-export" data-toggle="tooltip" title="Move a container"></span></td></tr>');
+                    @:$('#myTable > tbody:last-child').append('<tr><td>@container.Id</td><td>@container.Name</td><td>@container.State</td><td>tempState</td><td><span class="glyphicon glyphicon-dy glyphicon-play" data-toggle="tooltip" title="Start a container"></span><span class="glyphicon glyphicon-dy glyphicon-off" data-toggle="tooltip" title="Stop a container"></span><span class="glyphicon glyphicon-dy glyphicon-repeat" data-toggle="tooltip" title="Restart a container"></span><span class="glyphicon glyphicon-dy glyphicon-cog edit" data-toggle="tooltip" title="Edit a container"></span><span class="glyphicon glyphicon-dy glyphicon-export" data-toggle="tooltip" title="Move a container"></span></td></tr>');
                 }
             }
 
             var myTableDataTable = myTable.DataTable({
                 "aoColumns": [
+                       { "bSortable": false },
+                       //{ "bSortable": false, "bVisible": false, "aTargets": [0] },
                        { "bSortable": true },
                        { "bSortable": true },
                        { "bSortable": false },
                        { "bSortable": false }
                 ],
-                "order": [[1, "desc"]]
+
+                "order": [[0, "asc"]]
             });
 
             $('.glyphicon-play').click(function () {
                 //Start container
-                alert("Start container");
+                var data = getRowData($(this));
+                var id = data[0];
+
+                $.ajax({
+                    type: "POST",
+                    dataType: "json",
+                    url: '@Url.Action("StartContainer", "Home")',
+                    data: {
+                       id: id 
+                    },
+                    success: function (data) {
+                        alert(data);
+                    },
+                    error: function (error) {
+                        var x = error; //break here for debugging.
+                    }
+                });
+
+                alert("Starting container " + id);
             });
 
             $('.glyphicon-off').click(function () {
                 //Stop container
-                alert("Stop container");
+                var data = getRowData($(this));
+                var id = data[0];
+
+                alert("Stop container " + id);
             });
 
             $('.glyphicon-repeat').click(function () {
                 //Restart container
-                alert("Restart container");
+                var data = getRowData($(this));
+                var id = data[0];
+
+                alert("Restarting container " +id);
             });
 
             $('.glyphicon-cog').click(function () {
                 //Edit container
-                var data = myTableDataTable.row($(this).parents('tr')).data();
-                var containerName = data[0];
-                var containerState = data[1];
+                var data = getRowData($(this));
+                var containerName = data[1];
+                var containerState = data[2];
                 $("#containerName").val(containerName);
                 $("#containerState").val(containerState);
 
@@ -51,13 +78,22 @@
 
             $('.glyphicon-export').click(function () {
                 //Move container
-                alert("Move container");
+                var data = getRowData($(this));
+                var id = data[0];
+
+                alert("Moving container " + id);
             });
 
             $('#saveContainer').click(function () {
                 //Save container
                 alert("Saved container, will close this window now.");
             });
+
+            function getRowData(obj) {
+                var data = myTableDataTable.row(obj.parents('tr')).data();
+
+                return data;
+            }
 
         });
     </script>
@@ -81,6 +117,7 @@
         <table id="myTable" class="table table-striped" cellspacing="0">
             <thead>
                 <tr>
+                    <th>Id</th>
                     <th>Container name</th>
                     <th>State</th>
                     <th>Event</th>

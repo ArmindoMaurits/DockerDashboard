@@ -15,9 +15,26 @@ namespace DockerTestAma.Controllers
         public IActionResult Index()
         {
             dockerClient = new DockerClient();
-            List<Container> containers = dockerClient.GetContainers();
+            List<Container> containers = dockerClient.containers;
 
             return View(containers);
+        }
+
+        [HttpPost]
+        public JsonResult StartContainer()
+        {
+            int id = 0;
+            try
+            {
+                id = int.Parse(Request.Form["id"][0]);
+                dockerClient.StartContainer(id);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            
+            return Json("Started container " + id);
         }
 
     }

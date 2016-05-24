@@ -39,7 +39,7 @@ namespace DockerTestAma.Controllers
             return container;
         }
 
-        public  List<Image> GetImages()
+        public List<Image> GetImages()
         {
             List<Image> imageList;
             Uri uri = new Uri(@"http://amaurits.nl/get/images.json");
