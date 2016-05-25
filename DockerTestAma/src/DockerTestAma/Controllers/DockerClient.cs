@@ -63,6 +63,12 @@ namespace DockerTestAma.Controllers
 
         public void StartContainer(int id)
         {
+            ////http://thomasmaurer.nl/docker/containers/id/start
+            ////Env var: ApiAddress
+            ////Env value: http://thomasmaurer.nl/
+
+            string baseUrl = System.Environment.GetEnvironmentVariable("ApiAddress");
+            string apiUrl = baseUrl + "docker/containers/" + id + "/start";
             ////WebRequest naar docker/containers/id/start
             ////returned responseOK of NoContent.
         }
