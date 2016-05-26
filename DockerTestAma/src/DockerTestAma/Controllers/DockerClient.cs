@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using DockerTestAma.Models;
+using System.Collections;
 
 namespace DockerTestAma.Controllers
 {
@@ -9,11 +10,13 @@ namespace DockerTestAma.Controllers
     {
         public List<Container> containers;
         public List<Image> images;
+        public string baseUrl;
 
         public DockerClient()
         {
             containers = GetContainers();
             images = GetImages();
+            baseUrl = System.Environment.GetEnvironmentVariable("ApiAddress");
         }
 
         public List<Container> GetContainers()
@@ -61,16 +64,27 @@ namespace DockerTestAma.Controllers
             return image;
         }
 
-        public void StartContainer(int id)
+        public string StartContainer(int id)
         {
             ////http://thomasmaurer.nl/docker/containers/id/start
             ////Env var: ApiAddress
-            ////Env value: http://thomasmaurer.nl/
+            ////Env value: http://145.24.222.227:8080/
+            ////Env value: http://145.24.222.227:8080/ictlab/resources/
 
-            string baseUrl = System.Environment.GetEnvironmentVariable("ApiAddress");
+            int result;
+
             string apiUrl = baseUrl + "docker/containers/" + id + "/start";
-            ////WebRequest naar docker/containers/id/start
-            ////returned responseOK of NoContent.
+            Uri apiUri = new Uri(apiUrl);
+            result = Utils.GetHttpWebResponseCode(apiUri);
+
+            if (result >= 200 && result < 300)
+            {
+                return "Started container with code:" + result;
+            }else
+            {
+                return "Could not start container";
+            }
+
         }
     }
 }

@@ -10,11 +10,10 @@ namespace DockerTestAma.Controllers
 {
     public class HomeController : Controller
     {
-        public DockerClient dockerClient;
+        public DockerClient dockerClient = new DockerClient();
 
         public IActionResult Index()
         {
-            dockerClient = new DockerClient();
             List<Container> containers = dockerClient.containers;
 
             return View(containers);
@@ -24,17 +23,18 @@ namespace DockerTestAma.Controllers
         public JsonResult StartContainer()
         {
             int id = 0;
+            string status = string.Empty;
             try
             {
                 id = int.Parse(Request.Form["id"][0]);
-                dockerClient.StartContainer(id);
+                status = dockerClient.StartContainer(id);
             }
-            catch (Exception)
+            catch (NullReferenceException e)
             {
-                throw;
+                return Json("Could not start container: " + e);
             }
             
-            return Json("Started container " + id);
+            return Json(status);
         }
 
     }

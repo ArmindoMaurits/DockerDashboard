@@ -28,25 +28,33 @@
 
             $('.glyphicon-play').click(function () {
                 //Start container
-                var data = getRowData($(this));
-                var id = data[0];
+                var rowData = getRowData($(this));
+                var id = rowData[0];
+                var parentTableRow =  $(this).parents('tr');
+                
+                var row = myTableDataTable.row(parentTableRow);
 
                 $.ajax({
                     type: "POST",
                     dataType: "json",
                     url: '@Url.Action("StartContainer", "Home")',
                     data: {
-                       id: id 
+                       id: id
                     },
                     success: function (data) {
-                        alert(data);
-                    },
-                    error: function (error) {
-                        var x = error; //break here for debugging.
+                        if (data != "Could not start container") {
+                            parentTableRow.css("background-color", "yellow");
+                            rowData[2] = "Starting...";
+                        } else {
+                            parentTableRow.css("background-color", "red");
+                            rowData[2] = "Error";
+                        }
+                        
+                        row.data(rowData);
+                        myTableDataTable.draw();
+                            
                     }
                 });
-
-                alert("Starting container " + id);
             });
 
             $('.glyphicon-off').click(function () {
@@ -89,10 +97,23 @@
                 alert("Saved container, will close this window now.");
             });
 
+            $('#newContainer').click(function () {
+                //TODO: newContainer maken:
+                //Container name
+                //Container description
+                //Container image, vrije invoer.
+                //Starten op node: Lijst van nodes
+                alert("Creating container");
+            });
+
             function getRowData(obj) {
                 var data = myTableDataTable.row(obj.parents('tr')).data();
 
                 return data;
+            }
+
+            function checkResults(id) {
+                //TODO: Elke 10 sec vragen aan Front-end API of container gestart is.
             }
 
         });
@@ -112,6 +133,11 @@
     </style>
 }
 
+<div class="row" style="padding-bottom: 10px;">
+    <div class="col-sm-2">
+        <button class="btn btn-primary" id="newContainer"><span class="glyphicon glyphicon-plus"></span> New Container</button>
+    </div>
+</div>
 <div class="row">
     <div class="col-sm-12">
         <table id="myTable" class="table table-striped" cellspacing="0">

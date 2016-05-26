@@ -4,11 +4,11 @@ namespace DockerTestAma.Models
 {
     public class Image
     {
-        public string id { get; set; }
-        public string name { get; set; }
-        public string repository { get; set; }
-        public string tag { get; set; }
-        public DateTime creationDate { get; set; }
-        public double size { get; set; }
+        public string Id { get; set; }
+        public string Name { get; set; }
+        public string Repository { get; set; }
+        public string Tag { get; set; }
+        public DateTime CreationDate { get; set; }
+        public double Size { get; set; }
     }
 }
