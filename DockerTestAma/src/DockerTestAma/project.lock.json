@@ -7132,8 +7132,7 @@
         "lib/dnxcore50/Microsoft.Extensions.CodeGeneration.EntityFramework.xml",
         "Microsoft.Extensions.CodeGeneration.EntityFramework.1.0.0-rc1-final.nupkg",
         "Microsoft.Extensions.CodeGeneration.EntityFramework.1.0.0-rc1-final.nupkg.sha512",
-        "Microsoft.Extensions.CodeGeneration.EntityFramework.nuspec",
-        "Templates/DbContext/NewLocalDbContext.cshtml"
+        "Microsoft.Extensions.CodeGeneration.EntityFramework.nuspec"
       ]
     },
     "Microsoft.Extensions.CodeGeneration.Templating/1.0.0-rc1-final": {
