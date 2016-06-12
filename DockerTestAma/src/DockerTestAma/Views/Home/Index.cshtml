@@ -4,125 +4,168 @@
 
 @section scripts{
     <script>
+        var nodes = [];
+        var myTableDataTable;
+        const host = "http://145.24.222.227:8080/ictlab/api";
+
         $(document).ready(function () {
             var myTable = $('#myTable');
 
             @{
                 foreach(Container container in Model) {
-                    @:$('#myTable > tbody:last-child').append('<tr><td>@container.Id</td><td>@container.Name</td><td>@container.State</td><td>tempState</td><td><span class="glyphicon glyphicon-dy glyphicon-play" data-toggle="tooltip" title="Start a container"></span><span class="glyphicon glyphicon-dy glyphicon-off" data-toggle="tooltip" title="Stop a container"></span><span class="glyphicon glyphicon-dy glyphicon-repeat" data-toggle="tooltip" title="Restart a container"></span><span class="glyphicon glyphicon-dy glyphicon-cog edit" data-toggle="tooltip" title="Edit a container"></span><span class="glyphicon glyphicon-dy glyphicon-export" data-toggle="tooltip" title="Move a container"></span></td></tr>');
+                    @:$('#myTable > tbody:last-child').append('<tr><td>@container.Id</td><td>@container.Name</td><td>@container.CreationDate</td><td>@container.State</td><td><span class="glyphicon glyphicon-play" data-command="start" data-toggle="tooltip" title="Start container"></span><span class="glyphicon glyphicon-stop" data-toggle="tooltip"  data-command="stop" title="Stop container"></span><span class="glyphicon glyphicon-repeat" data-command="restart" data-toggle="tooltip" title="Restart container"></span> <span class="glyphicon glyphicon-remove-sign" data-command="delete" data-toggle="tooltip" title="Delete container"></span><span class="glyphicon glyphicon-export" data-command="move" data-toggle="tooltip" title="Move container"></span><span class="glyphicon glyphicon-duplicate" data-command="scale" data-toggle="scale" title="Scale container"></span></td></tr>');
                 }
             }
 
-            var myTableDataTable = myTable.DataTable({
+            myTableDataTable = myTable.DataTable({
                 "aoColumns": [
-                       { "bSortable": false },
-                       //{ "bSortable": false, "bVisible": false, "aTargets": [0] },
                        { "bSortable": true },
                        { "bSortable": true },
-                       { "bSortable": false },
+                       { "bSortable": true },
+                       { "bSortable": true },
                        { "bSortable": false }
                 ],
-
                 "order": [[0, "asc"]]
             });
 
-            $('.glyphicon-play').click(function () {
-                //Start container
-                var rowData = getRowData($(this));
-                var id = rowData[0];
-                var parentTableRow =  $(this).parents('tr');
-                
-                var row = myTableDataTable.row(parentTableRow);
+            $("#myTable tbody").on("click", "span", function () {
+                var command = $(this).attr('data-command');
+
+                if (command === "move" || command === "scale") {
+                    moveOrScale($(this), command);
+                } else {
+                    startRequest($(this), command);
+                }
+            });
+
+            $('#newContainer').click(function () {
+                $('#newContainerModal').modal('show');
+            });
+
+            /**
+             * Start a new container create request with filled in details
+             */
+            $('#startNewContainer').click(function () {
+                var containerName = $('#newContainerName').val();
+                var node = $('#startingNode option:selected').text();
+                var baseImage = $('#newContainerBaseImage').val();
+                var hostPort = $('#hostPort').val();
+                var containerPort = $('#containerPort').val();
+                var url = host + "/containers/";
+                var containerData = {
+                    containerName: containerName,
+                    node: node,
+                    baseImage: baseImage,
+                    hostPort: hostPort,
+                    containerPort: containerPort
+                };
 
                 $.ajax({
                     type: "POST",
                     dataType: "json",
-                    url: '@Url.Action("StartContainer", "Home")',
-                    data: {
-                       id: id
-                    },
-                    success: function (data) {
-                        if (data != "Could not start container") {
-                            parentTableRow.css("background-color", "yellow");
-                            rowData[2] = "Starting...";
-                        } else {
-                            parentTableRow.css("background-color", "red");
-                            rowData[2] = "Error";
+                    contentType: "application/json",
+                    url: url,
+                    data: JSON.stringify(containerData),
+                    statusCode: {
+                        201: function () {
+                            $('.alert').text("Created container: " + containerName);
+                            reloadDataTable(3000);
+                        },
+                        503: function () {
+                            $('.alert').text("Could not create container: " + containerName);
                         }
-                        
-                        row.data(rowData);
-                        myTableDataTable.draw();
-                            
                     }
                 });
+
             });
 
-            $('.glyphicon-off').click(function () {
-                //Stop container
-                var data = getRowData($(this));
-                var id = data[0];
-
-                alert("Stop container " + id);
-            });
-
-            $('.glyphicon-repeat').click(function () {
-                //Restart container
-                var data = getRowData($(this));
-                var id = data[0];
-
-                alert("Restarting container " +id);
-            });
-
-            $('.glyphicon-cog').click(function () {
-                //Edit container
-                var data = getRowData($(this));
-                var containerName = data[1];
-                var containerState = data[2];
-                $("#containerName").val(containerName);
-                $("#containerState").val(containerState);
-
-                $('#myModal').modal('show');
-            });
-
-            $('.glyphicon-export').click(function () {
-                //Move container
-                var data = getRowData($(this));
-                var id = data[0];
-
-                alert("Moving container " + id);
-            });
-
-            $('#saveContainer').click(function () {
-                //Save container
-                alert("Saved container, will close this window now.");
-            });
-
-            $('#newContainer').click(function () {
-                //TODO: newContainer maken:
-                //Container name
-                //Container description
-                //Container image, vrije invoer.
-                //Starten op node: Lijst van nodes
-                alert("Creating container");
-            });
-
-            function getRowData(obj) {
-                var data = myTableDataTable.row(obj.parents('tr')).data();
-
-                return data;
-            }
-
-            function checkResults(id) {
-                //TODO: Elke 10 sec vragen aan Front-end API of container gestart is.
-            }
-
+            getNumberOfNodes();
         });
+
+        function addNode(value) {
+            $('#startingNode, #moveContainerNodes').append($('<option>').text(value).attr('value', value));
+        }
+
+        function getNumberOfNodes() {
+            var url = host + "/nodes/";
+
+            $.ajax({
+                url: url,
+                type: 'GET',
+                dataType: 'json',
+                success: function (json) {
+                    $.each(json, function (i, node) {
+                        addNode(node[1]);
+                    });
+                }
+            });
+        }
+
+        function moveOrScale(currentObject, command) {
+            var rowData = myTableDataTable.row(currentObject.parents('tr')).data();
+            var id = rowData[0];
+
+            $('#moveContainerModal').modal('show');
+            $('#moveContainerId').val(id);
+            $('#moveContainer').val(command);
+
+        }
+
+        $('#moveContainer').click(function () {
+            var node = $('#moveContainerNodes option:selected').text();
+            var id = $('#moveContainerId').val();
+            var method = $('#moveContainer').val();
+
+            postMoveOrScaleContainer(id, node, method);
+        });
+
+        function postMoveOrScaleContainer(id, node, method) {
+            var url = host + "/containers/" + id + "/" + method + "/" + node;
+
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                url: url
+            });
+        }
+
+        function startRequest(currentObject, command) {
+            var parentTableRow = currentObject.parents('tr');
+            var rowData = myTableDataTable.row(parentTableRow).data();
+            var id = rowData[0];
+            var url = host + "/containers/" + id + "/" + command + "/";
+
+            $.ajax({
+                type: "GET",
+                dataType: "json",
+                url: url,
+                data: {
+                    id: id
+                },
+                statusCode: {
+                    201: function () {
+                        parentTableRow.css("background-color", "green");
+                    },
+                    503: function () {
+                        parentTableRow.css("background-color", "red");
+                    }
+                }
+            });
+
+            reloadDataTable(3000);
+        }
+
+        function reloadDataTable(ms) {
+            setTimeout(function () {
+                location.reload();
+            }, ms);
+        }
     </script>
 }
 
 @section styles{
     <style>
-        .glyphicon-dy {
+        .glyphicon {
             padding-right: 15px;
             cursor: pointer;
         }
@@ -130,9 +173,39 @@
         .paddingLeft10{
             padding-left: 10px;
         }
+
+        .loadDiv{
+            position:   fixed;
+            z-index:    1000;
+            top:        0;
+            left:       0;
+            height:     100%;
+            width:      100%;
+            background: rgba( 255, 255, 255, .8 )
+            url('http://i.stack.imgur.com/FhHRx.gif')
+            50% 50%
+            no-repeat;
+        }
+
+        .navbar-brand img {
+            -webkit-transition: -webkit-transform 1s;
+            transition: transform 1s;
+        }
+
+        .navbar-brand img:hover {
+            -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+        }
     </style>
 }
 
+<div class="row">
+    <div class="col-sm-12">
+        <div class="alert fade in" style="display: none">
+            <a class="close" onclick="$('.alert').hide()" aria-label="close">&times;</a>
+        </div>
+    </div>
+</div>
 <div class="row" style="padding-bottom: 10px;">
     <div class="col-sm-2">
         <button class="btn btn-primary" id="newContainer"><span class="glyphicon glyphicon-plus"></span> New Container</button>
@@ -145,8 +218,8 @@
                 <tr>
                     <th>Id</th>
                     <th>Container name</th>
+                    <th>Creation date</th>
                     <th>State</th>
-                    <th>Event</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -155,52 +228,89 @@
     </div>
 </div>
 
-<!-- Modal -->
-<div id="myModal" class="modal fade" role="dialog">
+<div id="moveContainerModal" class="modal fade" role="dialog">
     <div class="modal-dialog">
-        <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Container configuration</h4>
+                <h4 class="modal-title">Move container</h4>
             </div>
             <div class="modal-body">
                 <div class="row">
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label>Container name:</label>
-                            <input type="text" class="form-control" id="containerName">
+                            <label for="moveContainerId">Container ID:</label>
+                            <input type="text" class="form-control" id="moveContainerId" disabled="disabled">
                         </div>
                     </div>
                     <div class="col-sm-6">
                         <div class="form-group">
-                            <label>Container description:</label>
-                            <input type="text" class="form-control" id="containerDescription">
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-offset-6 col-sm-6">
-                        <label>Container state:</label>
-                        <input type="text" class="form-control" disabled="disabled" id="containerState">
-                    </div>
-                </div>
-                <div class="row" style="margin-top: 10px;">
-                    <div class="col-sm-12">
-                        <div class="form-group">
-                            <label>
-                                Actions
-                            </label>
-                            <button class="btn btn-default" id="">Start<span class="glyphicon paddingLeft10 glyphicon-play"></span></button>
-                            <button class="btn btn-default" id="">Restart<span class="glyphicon paddingLeft10 glyphicon-repeat"></span></button>
-                            <button class="btn btn-default" id="">Move<span class="glyphicon paddingLeft10 glyphicon-export"></span></button>
+                            <label for="moveContainerNodes">Move container to which Docker Node?</label>
+                            <select class="form-control" id="moveContainerNodes"></select>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal" id="saveContainer">Save</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="moveContainer">Move</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="newContainerModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">New container</h4>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="newContainerName">Container name:</label>
+                            <input type="text" class="form-control" id="newContainerName" placeholder=" e.g. JenkinsContainer ">
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <div class="form-group">
+                            <label for="startingNode">Preferred starting node:</label>
+                            <select class="form-control" id="startingNode"></select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="form-group">
+                            <label for="newContainerBaseImage">Container base image:</label>
+                            <input type="text" class="form-control" id="newContainerBaseImage" placeholder=" e.g. microsoft/aspnet">
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-12">
+                        <label>
+                            Container parameters
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6">
+                        <label for="hostPort">Host port</label>
+                        <input id="hostPort" type="number" class="form-control" placeholder=" e.g. 80" onkeyup="this.value=this.value.replace(/[^\d]/,'')">
+                    </div>
+                    <div class="col-sm-6">
+                        <label for="containerPort">Container port</label>
+                        <input id="containerPort" type="number" class="form-control" placeholder=" e.g. 8080" onkeyup="this.value=this.value.replace(/[^\d]/,'')">
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="startNewContainer">Start</button>
             </div>
         </div>
 

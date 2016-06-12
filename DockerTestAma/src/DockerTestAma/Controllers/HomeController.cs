@@ -10,11 +10,12 @@ namespace DockerTestAma.Controllers
 {
     public class HomeController : Controller
     {
-        public DockerClient dockerClient = new DockerClient();
+        public DockerClient DockerClient;
 
         public IActionResult Index()
         {
-            List<Container> containers = dockerClient.containers;
+            DockerClient = new DockerClient();
+            List<Container> containers = DockerClient.Containers;
 
             return View(containers);
         }
@@ -27,7 +28,7 @@ namespace DockerTestAma.Controllers
             try
             {
                 id = int.Parse(Request.Form["id"][0]);
-                status = dockerClient.StartContainer(id);
+                status = DockerClient.StartContainer(id);
             }
             catch (NullReferenceException e)
             {

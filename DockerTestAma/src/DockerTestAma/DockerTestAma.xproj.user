@@ -5,7 +5,7 @@
     <NameOfLastUsedPublishProfile>CustomDockerProfile</NameOfLastUsedPublishProfile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <ActiveDebugProfile>Docker</ActiveDebugProfile>
+    <ActiveDebugProfile>IIS Express</ActiveDebugProfile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <ActiveDebugProfile>IIS Express</ActiveDebugProfile>
