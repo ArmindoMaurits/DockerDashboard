@@ -15,7 +15,7 @@ namespace DockerTestAma.Controllers
         public IActionResult Index()
         {
             DockerClient = new DockerClient();
-            List<Container> containers = DockerClient.Containers;
+            List<DockerContainer> containers = DockerClient.Containers;
 
             return View(containers);
         }

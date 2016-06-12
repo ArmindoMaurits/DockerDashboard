@@ -8,7 +8,7 @@ namespace DockerTestAma.Controllers
 {
     public class DockerClient
     {
-        public List<Container> Containers { get; set; }
+        public List<DockerContainer> Containers { get; set; }
         public string BaseUrl = "http://145.24.222.227:8080/ictlab/api";
 
         public DockerClient()
@@ -16,9 +16,9 @@ namespace DockerTestAma.Controllers
             Containers = InitContainers();
         }
 
-        public List<Container> InitContainers()
+        public List<DockerContainer> InitContainers()
         {
-            List<Container> containerList;
+            List<DockerContainer> containerList;
             string url = BaseUrl + "/containers/";
             Uri uri = new Uri(url);
 

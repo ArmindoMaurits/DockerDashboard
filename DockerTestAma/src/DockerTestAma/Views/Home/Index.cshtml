@@ -12,7 +12,7 @@
             var myTable = $('#myTable');
 
             @{
-                foreach(Container container in Model) {
+                foreach(DockerContainer container in Model) {
                     @:$('#myTable > tbody:last-child').append('<tr><td>@container.Id</td><td>@container.Name</td><td>@container.CreationDate</td><td>@container.State</td><td><span class="glyphicon glyphicon-play" data-command="start" data-toggle="tooltip" title="Start container"></span><span class="glyphicon glyphicon-stop" data-toggle="tooltip"  data-command="stop" title="Stop container"></span><span class="glyphicon glyphicon-repeat" data-command="restart" data-toggle="tooltip" title="Restart container"></span> <span class="glyphicon glyphicon-remove-sign" data-command="delete" data-toggle="tooltip" title="Delete container"></span><span class="glyphicon glyphicon-export" data-command="move" data-toggle="tooltip" title="Move container"></span><span class="glyphicon glyphicon-duplicate" data-command="scale" data-toggle="scale" title="Scale container"></span></td></tr>');
                 }
             }

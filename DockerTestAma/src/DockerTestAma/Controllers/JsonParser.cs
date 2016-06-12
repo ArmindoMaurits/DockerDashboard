@@ -7,13 +7,19 @@ namespace DockerTestAma.Controllers
 {
     public static class JsonParser
     {
-
-        public static List<Container> ParseContainers(string responseData)
+        public static List<DockerContainer> ParseContainers(string responseData)
         {
-            List<Container> containers;
-            containers = JsonConvert.DeserializeObject<List<Container>>(responseData);
-
+            List<DockerContainer> containers = new List<DockerContainer>();
+            try
+            {
+                containers = JsonConvert.DeserializeObject<List<DockerContainer>>(responseData);
+            }
+            catch (JsonSerializationException e)
+            {
+                throw new JsonSerializationException("Cannot deserialize JSON object: ", e);
+            }
             return containers;
+
         }
     }
 }
