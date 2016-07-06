@@ -1,28 +1,31 @@
-﻿using System;
-
-using System.Collections.Generic;
-using DockerTestAma.Models;
-using System.Collections;
-
-namespace DockerTestAma.Controllers
+﻿namespace DockerTestAma.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using Models;
+
     public class DockerClient
     {
-        public List<DockerContainer> Containers { get; set; }
-        public string BaseUrl = "http://145.24.222.227:8080/ictlab/api";
+        private List<DockerContainer> containers { get; set; }
+        private readonly string baseUrl = "http://145.24.222.227:8080/ictlab/api";
 
         public DockerClient()
         {
-            Containers = InitContainers();
+            containers = InitContainers();
         }
 
-        public List<DockerContainer> InitContainers()
+        public List<DockerContainer> GetContainers()
+        {
+            return this.containers;
+        }
+
+        private List<DockerContainer> InitContainers()
         {
             List<DockerContainer> containerList;
-            string url = BaseUrl + "/containers/";
+            string url = baseUrl + "/containers/";
             Uri uri = new Uri(url);
 
-            string response = Utils.GetHtmlPage(uri);
+            string response = HttpUtils.GetHtmlPage(uri);
             containerList = JsonParser.ParseContainers(response);
 
             return containerList;
@@ -30,11 +33,9 @@ namespace DockerTestAma.Controllers
 
         public string StartContainer(int id)
         {
-            int result;
-
-            string url = BaseUrl + "/containers/" + id + "/start";
+            string url = baseUrl + "/containers/" + id + "/start";
             Uri apiUri = new Uri(url);
-            result = Utils.GetHttpWebResponseCode(apiUri);
+            int result = HttpUtils.GetHttpWebResponseCode(apiUri);
 
             if (result >= 200 && result < 300)
             {

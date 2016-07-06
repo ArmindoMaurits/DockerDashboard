@@ -3,13 +3,14 @@
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>@ViewData["Title"] - DockerTestAma</title>
+        <title>Docker Dashboard</title>
 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
-
-        <link href="https://cdn.datatables.net/1.10.11/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.11/css/dataTables.bootstrap.min.css"  />
+        <link rel="stylesheet" href="/css/site.css" />
 
         @RenderSection("styles", false)
+        
     </head>
     <body>
         <div class="navbar navbar-inverse navbar-fixed-top">
@@ -19,7 +20,7 @@
                 </div>
             </div>
         </div>
-        <div class="container body-content" style="margin-top: 75px;">
+        <div class="container body-content">
             @RenderBody()
             <hr />
             <footer>
@@ -31,7 +32,6 @@
         <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
         <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.11/js/jquery.dataTables.min.js"></script>
         <script  type="text/javascript" src="https://cdn.datatables.net/1.10.11/js/dataTables.bootstrap.min.js"></script>
-
         @RenderSection("scripts", required: false)
     </body>
 </html>

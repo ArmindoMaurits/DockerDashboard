@@ -1,14 +1,14 @@
-﻿using System;
-using System.IO;
-using System.Net;
-
-namespace DockerTestAma.Controllers
+﻿namespace DockerTestAma.Controllers
 {
-    public static class Utils
+    using System;
+    using System.IO;
+    using System.Net;
+
+    public static class HttpUtils
     {
         public static string GetHtmlPage(Uri uri)
         {
-            string responseData = String.Empty;
+            string responseData = string.Empty;
 
             try
             {
@@ -22,6 +22,7 @@ namespace DockerTestAma.Controllers
             }
             catch (WebException we)
             {
+                // TODO: Logger gebruiken.
                 Console.WriteLine("Could not get webURL: " + GetWebResponseCode((HttpWebResponse)we.Response));
             }
             return responseData;
@@ -43,6 +44,7 @@ namespace DockerTestAma.Controllers
             }
             catch (WebException we)
             {
+                // TODO: Logger gebruiken.
                 Console.WriteLine("Could not get webURL: " + GetWebResponseCode((HttpWebResponse)we.Response));
             }
             return responseCode;

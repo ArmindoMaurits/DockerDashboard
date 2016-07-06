@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace DockerTestAma.Models
+﻿namespace DockerTestAma.Models
 {
+    using System;
 
     public class DockerContainer : IContainer
     {

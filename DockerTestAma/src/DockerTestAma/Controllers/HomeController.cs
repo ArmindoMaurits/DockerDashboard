@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.AspNet.Mvc;
-using DockerTestAma.Models;
-using System.IO;
-using System.Net;
-using Newtonsoft.Json;
-
-namespace DockerTestAma.Controllers
+﻿namespace DockerTestAma.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using Microsoft.AspNet.Mvc;
+    using Models;
+
     public class HomeController : Controller
     {
         public DockerClient DockerClient;
@@ -15,7 +12,7 @@ namespace DockerTestAma.Controllers
         public IActionResult Index()
         {
             DockerClient = new DockerClient();
-            List<DockerContainer> containers = DockerClient.Containers;
+            List<DockerContainer> containers = DockerClient.GetContainers();
 
             return View(containers);
         }
@@ -23,18 +20,22 @@ namespace DockerTestAma.Controllers
         [HttpPost]
         public JsonResult StartContainer()
         {
-            int id = 0;
             string status = string.Empty;
             try
             {
-                id = int.Parse(Request.Form["id"][0]);
+                int id = int.Parse(Request.Form["id"][0]);
                 status = DockerClient.StartContainer(id);
             }
             catch (NullReferenceException e)
             {
+                // TODO: Logger gebruiken.
+                // TODO: Status code returnen
+                // Response.StatusCode = (int)System.Net.HttpStatusCode.Created
+                // Response.StatusCode = (int)System.Net.HttpStatusCode.ServiceUnavailable
                 return Json("Could not start container: " + e);
             }
-            
+
+            // TODO: Status code returnen
             return Json(status);
         }
 

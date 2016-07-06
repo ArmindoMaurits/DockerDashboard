@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using DockerTestAma.Models;
-using Newtonsoft.Json;
-
-namespace DockerTestAma.Controllers
+﻿namespace DockerTestAma.Controllers
 {
+    using System.Collections.Generic;
+    using Models;
+    using Newtonsoft.Json;
+
     public static class JsonParser
     {
         public static List<DockerContainer> ParseContainers(string responseData)
@@ -16,6 +15,8 @@ namespace DockerTestAma.Controllers
             }
             catch (JsonSerializationException e)
             {
+                // TODO: Create singleton class, for logging
+                // TODO: Don't throw the exception here, but log it!
                 throw new JsonSerializationException("Cannot deserialize JSON object: ", e);
             }
             return containers;

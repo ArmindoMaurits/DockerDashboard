@@ -1,14 +1,10 @@
-﻿@{
-    ViewData["Title"] = "Dashboard";
-}
-
-@section scripts{
+﻿@section scripts{
     <script>
         var nodes = [];
         var myTableDataTable;
         const host = "http://145.24.222.227:8080/ictlab/api";
 
-        $(document).ready(function () {
+        $(function () {
             var myTable = $('#myTable');
 
             @{
@@ -199,13 +195,6 @@
     </style>
 }
 
-<div class="row">
-    <div class="col-sm-12">
-        <div class="alert fade in" style="display: none">
-            <a class="close" onclick="$('.alert').hide()" aria-label="close">&times;</a>
-        </div>
-    </div>
-</div>
 <div class="row" style="padding-bottom: 10px;">
     <div class="col-sm-2">
         <button class="btn btn-primary" id="newContainer"><span class="glyphicon glyphicon-plus"></span> New Container</button>
