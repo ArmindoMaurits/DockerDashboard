@@ -31,7 +31,7 @@
             return containerList;
         }
 
-        public string StartContainer(int id)
+        public bool StartContainer(int id)
         {
             string url = baseUrl + "/containers/" + id + "/start";
             Uri apiUri = new Uri(url);
@@ -39,13 +39,10 @@
 
             if (result >= 200 && result < 300)
             {
-                return "Started container with code:" + result;
-            }
-            else
-            {
-                return "Could not start container";
+                return true;
             }
 
+            return false;
         }
     }
 }

@@ -20,7 +20,7 @@
         [HttpPost]
         public JsonResult StartContainer()
         {
-            string status = string.Empty;
+            bool status;
             try
             {
                 int id = int.Parse(Request.Form["id"][0]);
@@ -29,13 +29,11 @@
             catch (NullReferenceException e)
             {
                 // TODO: Logger gebruiken.
-                // TODO: Status code returnen
-                // Response.StatusCode = (int)System.Net.HttpStatusCode.Created
-                // Response.StatusCode = (int)System.Net.HttpStatusCode.ServiceUnavailable
+                Response.StatusCode = (int)System.Net.HttpStatusCode.ServiceUnavailable;
                 return Json("Could not start container: " + e);
             }
 
-            // TODO: Status code returnen
+            Response.StatusCode = (int)System.Net.HttpStatusCode.Created;
             return Json(status);
         }
 
