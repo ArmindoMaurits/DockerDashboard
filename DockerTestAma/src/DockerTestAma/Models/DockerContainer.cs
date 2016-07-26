@@ -8,6 +8,7 @@
     /// DockerContainer object, which holds Docker Container information.
     /// Implementing the ID and name properties from IContainer interface.
     /// </summary>
+    [ContractClass(typeof(IContainer))]
     public class DockerContainer : IContainer
     {
         //ID is a nullable type, shorthand for Nullable<int>. So we can put it on our Contract.

@@ -6,31 +6,31 @@
 
     public class DockerClient
     {
-        private List<DockerContainer> containers { get; set; }
+        private List<DockerContainer> Containers { get; set; }
         private readonly string baseUrl = "http://145.24.222.227:8080/ictlab/api";
 
+        /// <summary>
+        /// Initialze a new DockerClient, also gets all containers
+        /// </summary>
         public DockerClient()
         {
-            containers = InitContainers();
+            SetContainers(InitContainers());
         }
 
+        /// <summary>
+        /// Gets a list of Docker Containers
+        /// </summary>
+        /// <returns></returns>
         public List<DockerContainer> GetContainers()
         {
-            return this.containers;
+            return Containers;
         }
 
-        private List<DockerContainer> InitContainers()
-        {
-            List<DockerContainer> containerList;
-            string url = baseUrl + "/containers/";
-            Uri uri = new Uri(url);
-
-            string response = HttpUtils.GetHtmlPage(uri);
-            containerList = JsonParser.ParseContainers(response);
-
-            return containerList;
-        }
-
+        /// <summary>
+        /// Start a given Contaienr by given ID
+        /// </summary>
+        /// <param name="id">ID of the Container that needs to get started</param>
+        /// <returns>Started, true of false</returns>
         public bool StartContainer(int id)
         {
             string url = baseUrl + "/containers/" + id + "/start";
@@ -43,6 +43,23 @@
             }
 
             return false;
+        }
+
+        private List<DockerContainer> InitContainers()
+        {
+            List<DockerContainer> containerList;
+            string url = baseUrl + "/containers/";
+            Uri uri = new Uri(url);
+
+            string response = HttpUtils.GetJsonFromUri(uri);
+            containerList = JsonParser.ParseContainers(response);
+
+            return containerList;
+        }
+
+        private void SetContainers(List<DockerContainer> containers)
+        {
+            Containers = containers;
         }
     }
 }

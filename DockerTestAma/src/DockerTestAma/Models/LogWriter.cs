@@ -1,4 +1,6 @@
-﻿namespace DockerTestAma.Models
+﻿using System.Diagnostics;
+
+namespace DockerTestAma.Models
 {
     /// <summary>
     /// LogWriter is a class that can only be made once, it allows logging of an error message.
@@ -44,6 +46,7 @@
         /// <param name="message">Message that has to be logged</param>
         public void LogMessage(string message)
         {
+            Debug.WriteLine(message);
             // TODO: Log here
         }
     }

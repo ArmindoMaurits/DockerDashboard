@@ -7,24 +7,53 @@
 
     public class HomeController : Controller
     {
-        public DockerClient DockerClient;
-
         public IActionResult Index()
         {
-            DockerClient = new DockerClient();
-            List<DockerContainer> containers = DockerClient.GetContainers();
+            return View();
+        }
 
-            return View(containers);
+        public JsonResult GetContainers()
+        {
+            DockerClient dockerClient = new DockerClient();
+            List<DockerContainer> containers = dockerClient.GetContainers();
+
+            Response.StatusCode = (int)System.Net.HttpStatusCode.Created;
+            return Json(containers);
         }
 
         [HttpPost]
-        public JsonResult StartContainer()
+        public JsonResult StartAction([FromFormAttribute]int id, [FromFormAttribute]string action)
         {
-            bool status;
             try
             {
-                int id = int.Parse(Request.Form["id"][0]);
-                status = DockerClient.StartContainer(id);
+                //JObject kan werken.
+                LogWriter.Instance.LogMessage("Start action: " + action + " on containerID: " + id);
+                //Do something.
+            }
+            catch (NullReferenceException e)
+            {
+                // TODO: Logger gebruiken.
+                Response.StatusCode = (int)System.Net.HttpStatusCode.ServiceUnavailable;
+                return Json("Action not executed: " + e);
+            }
+
+            Response.StatusCode = (int)System.Net.HttpStatusCode.Created;
+            return Json("Action excecuted.");
+        }
+
+        /// <summary>
+        /// Start a Container by given container ID.
+        /// </summary>
+        /// <returns>The response of the start request. Also returns HTTP status code 201 or 501 depending on the result.</returns>
+        [HttpPost]
+        public JsonResult StartContainer(int id)
+        {
+            bool started;
+            try
+            {
+                //int id = int.Parse(Request.Form["id"][0]);
+                DockerClient dockerClient = new DockerClient();
+                started = dockerClient.StartContainer(id);
             }
             catch (NullReferenceException e)
             {
@@ -34,8 +63,7 @@
             }
 
             Response.StatusCode = (int)System.Net.HttpStatusCode.Created;
-            return Json(status);
+            return Json(started);
         }
-
     }
 }

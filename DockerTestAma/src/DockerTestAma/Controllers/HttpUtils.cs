@@ -4,9 +4,17 @@
     using System.IO;
     using System.Net;
 
+    /// <summary>
+    /// This class handles all HTTP calls and responses.
+    /// </summary>
     public static class HttpUtils
     {
-        public static string GetHtmlPage(Uri uri)
+        /// <summary>
+        /// Get a JSON object from a given webpage URI.
+        /// </summary>
+        /// <param name="uri">The location of the HTML page</param>
+        /// <returns>The response of the webpage, so the JSON</returns>
+        public static string GetJsonFromUri(Uri uri)
         {
             string responseData = string.Empty;
 
@@ -20,19 +28,29 @@
                     responseData = streamReader.ReadToEnd();
                 }
             }
-            catch (WebException we)
+            catch (WebException webException)
             {
                 // TODO: Logger gebruiken.
-                Console.WriteLine("Could not get webURL: " + GetWebResponseCode((HttpWebResponse)we.Response));
+                Console.WriteLine("Could not get webURL: " + GetWebResponseCode((HttpWebResponse)webException.Response));
             }
             return responseData;
         }
 
-        private static int GetWebResponseCode(HttpWebResponse response)
+        /// <summary>
+        /// Parses the webresponse and returns the StatusCode of the response.
+        /// </summary>
+        /// <param name="httpWebResponse">Our HttpWebReponse</param>
+        /// <returns>Statuscode of the HttpWebReponse</returns>
+        private static int GetWebResponseCode(HttpWebResponse httpWebResponse)
         {
-            return (int)response.StatusCode;
+            return (int)httpWebResponse.StatusCode;
         }
 
+        /// <summary>
+        /// Gets the response code of a given URI
+        /// </summary>
+        /// <param name="uri">Desired URI location of a webpage</param>
+        /// <returns>The webresponse</returns>
         public static int GetHttpWebResponseCode(Uri uri)
         {
             int responseCode = 0;

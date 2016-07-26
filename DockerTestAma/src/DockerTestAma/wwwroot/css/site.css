@@ -16,3 +16,35 @@ select,
 textarea {
     max-width: 280px;
 }
+
+.glyphicon {
+    padding-right: 15px;
+    cursor: pointer;
+}
+
+.paddingLeft10{
+    padding-left: 10px;
+}
+
+.loadDiv{
+    position:   fixed;
+    z-index:    1000;
+    top:        0;
+    left:       0;
+    height:     100%;
+    width:      100%;
+    background: rgba( 255, 255, 255, .8 )
+    url('http://i.stack.imgur.com/FhHRx.gif')
+    50% 50%
+    no-repeat;
+}
+
+.navbar-brand img {
+    -webkit-transition: -webkit-transform 1s;
+    transition: transform 1s;
+}
+
+.navbar-brand img:hover {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+}
