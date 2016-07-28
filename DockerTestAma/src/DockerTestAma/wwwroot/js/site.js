@@ -129,14 +129,12 @@ function postMoveOrScaleContainer(id, node, method) {
 function startRequest(currentObject, command) {
     var parentTableRow = currentObject.parents('tr');
     var rowData = myTableDataTable.row(parentTableRow).data();
-    var id = rowData.Id;
 
     $.ajax({
         type: 'POST',
-        url: '/Home/StartAction',
-        data: JSON.stringify({ id: id, action: command }),
-        dataType: 'html',
-        contentType: "application/json; charset=utf-8",
+        url: '/Home/PostAction',
+        data: { actionName: command, id: rowData.Id},
+        dataType: 'json',
         statusCode: {
             201: function () {
                 parentTableRow.css("background-color", "green");
@@ -144,10 +142,13 @@ function startRequest(currentObject, command) {
             503: function () {
                 parentTableRow.css("background-color", "red");
             }
+        },
+        success: function (data) {
+            console.log("data: " + data);
         }
     });
 
-    reloadDataTable(3000);
+    reloadDataTable(4000);
 }
 
 /**

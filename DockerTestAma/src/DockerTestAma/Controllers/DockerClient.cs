@@ -27,19 +27,27 @@
         }
 
         /// <summary>
-        /// Start a given Contaienr by given ID
+        /// Start a given action on Container by given ID
         /// </summary>
-        /// <param name="id">ID of the Container that needs to get started</param>
-        /// <returns>Started, true of false</returns>
-        public bool StartContainer(int id)
+        /// <param name="id">ID of the Container that needs to get the action used on</param>
+        /// <param name="action">The action that needs to be invoked on an container.</param>
+        /// <returns>Excecuted action, true of false</returns>
+        public bool StartAction(int id, string action)
         {
-            string url = baseUrl + "/containers/" + id + "/start";
-            Uri apiUri = new Uri(url);
-            int result = HttpUtils.GetHttpWebResponseCode(apiUri);
-
-            if (result >= 200 && result < 300)
+            try
             {
-                return true;
+                string url = baseUrl + "/containers/" + id + "/" + action;
+                Uri apiUri = new Uri(url);
+                int result = HttpUtils.GetHttpWebResponseCode(apiUri);
+
+                if (result >= 200 && result < 300)
+                {
+                    return true;
+                }
+            }
+            catch (NullReferenceException)
+            {
+                LogWriter.Instance.LogMessage("Could not "+ action +" container: " + id);
             }
 
             return false;
