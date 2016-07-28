@@ -6,6 +6,11 @@
 
     public static class JsonParser
     {
+        /// <summary>
+        /// Parse a JSON response into a list of Docker containers
+        /// </summary>
+        /// <param name="responseData">JSON response</param>
+        /// <returns>A list of Docker containers</returns>
         public static List<DockerContainer> ParseContainers(string responseData)
         {
             List<DockerContainer> containers = new List<DockerContainer>();
@@ -15,12 +20,36 @@
             }
             catch (JsonSerializationException e)
             {
-                // TODO: Create singleton class, for logging
-                // TODO: Don't throw the exception here, but log it!
-                throw new JsonSerializationException("Cannot deserialize JSON object: ", e);
+                LogWriter.Instance.LogMessage("Cannot deserialize JSON object: " + e);
             }
-            return containers;
 
+            return containers;
+        }
+
+        /// <summary>
+        /// Parse all the nodes from a web response data.
+        /// </summary>
+        /// <param name="responseData">The response data of a JSON response</param>
+        /// <returns>A list of IP-addresses of the Nodes</returns>
+        public static List<string> ParseNodes(string responseData)
+        {
+            List<string> nodes = new List<string>();
+
+            try
+            {
+                dynamic jsonObjectArray = JsonConvert.DeserializeObject(responseData);
+
+                foreach (var jsonObject in jsonObjectArray)
+                {
+                    nodes.Add( (string)jsonObject.name);
+                }
+            }
+            catch (System.Exception e)
+            {
+                LogWriter.Instance.LogMessage("Cannot get node IP adresses from response: " + e);
+            }
+
+            return nodes;
         }
     }
 }

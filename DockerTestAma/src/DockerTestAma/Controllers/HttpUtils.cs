@@ -3,6 +3,7 @@
     using System;
     using System.IO;
     using System.Net;
+    using Models;
 
     /// <summary>
     /// This class handles all HTTP calls and responses.
@@ -30,10 +31,31 @@
             }
             catch (WebException webException)
             {
-                // TODO: Logger gebruiken.
-                Console.WriteLine("Could not get webURL: " + GetWebResponseCode((HttpWebResponse)webException.Response));
+                LogWriter.Instance.LogMessage("Could not get webURL: " + GetWebResponseCode((HttpWebResponse)webException.Response));
             }
             return responseData;
+        }
+
+        public static int PostJsonAtUri(Uri uri)
+        {
+            int responseCode;
+
+            try
+            {
+                WebRequest webRequest = WebRequest.Create(uri);
+                webRequest.Credentials = CredentialCache.DefaultCredentials;
+                webRequest.Method = "POST";
+                webRequest.ContentType = "json";
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+
+            return responseCode;
         }
 
         /// <summary>
@@ -62,8 +84,7 @@
             }
             catch (WebException we)
             {
-                // TODO: Logger gebruiken.
-                Console.WriteLine("Could not get webURL: " + GetWebResponseCode((HttpWebResponse)we.Response));
+                LogWriter.Instance.LogMessage("Could not get webURL: " + GetWebResponseCode((HttpWebResponse)we.Response));
             }
             return responseCode;
         }

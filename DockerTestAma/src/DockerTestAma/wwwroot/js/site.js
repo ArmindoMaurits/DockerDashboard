@@ -48,7 +48,6 @@ $(function () {
         var baseImage = $('#newContainerBaseImage').val();
         var hostPort = $('#hostPort').val();
         var containerPort = $('#containerPort').val();
-        var url = host + "/containers/";
         var containerData = {
             containerName: containerName,
             node: node,
@@ -61,7 +60,7 @@ $(function () {
             type: "POST",
             dataType: "json",
             contentType: "application/json",
-            url: url,
+            url: '/Home/PostCreateContainer',
             data: JSON.stringify(containerData),
             statusCode: {
                 201: function () {
@@ -92,15 +91,13 @@ function addNode(value) {
 }
 
 function getNumberOfNodes() {
-    var url = host + "/nodes/";
-
     $.ajax({
-        url: url,
+        url: '/Home/GetNodes',
         type: 'GET',
         dataType: 'json',
         success: function (json) {
             $.each(json, function (i, node) {
-                addNode(node[1]);
+                addNode(node);
             });
         }
     });

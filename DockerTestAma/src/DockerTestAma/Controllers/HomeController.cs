@@ -14,16 +14,22 @@
             return View();
         }
 
+        [HttpGet]
         public JsonResult GetContainers()
         {
-            List<DockerContainer> containers = dockerClient.GetContainers();
-
             Response.StatusCode = (int)System.Net.HttpStatusCode.Created;
-            return Json(containers);
+            return Json(dockerClient.GetContainers());
+        }
+
+        [HttpGet]
+        public JsonResult GetNodes()
+        {
+            Response.StatusCode = (int)System.Net.HttpStatusCode.Created;
+            return Json(dockerClient.GetNodes());
         }
 
         [HttpPost]
-        public IActionResult PostAction(string actionName, int id)
+        public JsonResult PostAction(string actionName, int id)
         {
             try
             {
@@ -40,6 +46,16 @@
             Response.StatusCode = (int)System.Net.HttpStatusCode.Created;
             return Json("Action excecuted.");
         }
+
+        [HttpPost]
+        public JsonResult PostCreateContainer(string containerName, string node, string baseImage, string hostPort, string containerPort)
+        {
+            bool created = dockerClient.CreateNewContainer(containerName, node, baseImage, hostPort, containerPort);
+
+            Response.StatusCode = (int)System.Net.HttpStatusCode.Created;
+            return Json("Container created.");
+        }
+
 
         /// <summary>
         /// Start a specific action on a Container by given container ID.
