@@ -1,10 +1,32 @@
-﻿//JS for our Docker dashboard
+﻿//
+/**
+ * @version 1.0.0
+ * @since 10-06-2016
+ * JS for our Docker dashboard
+ */
+
+/**
+ * The string[] where all alive node IP-addresses will be saved.
+ * @type {Array}
+ */
 var nodes = [];
+/**
+ * This var is used to save the instanced DataTable object in. Is used in multiple functions.
+ */
 var myTableDataTable;
+/**
+ * Starting URL for all requests, based on the website the user opens.
+ * @example {string} "http://192.168.1.199:8080/ictlab/api"
+ * @type {string}
+ */
 const host = "http://145.24.222.227:8080/ictlab/api";
 
-//Doc ready function
+
 $(function () {
+    /**
+     * Initialize a new DataTable object on the given HTML table
+     * @return {Object} appends the action buttons to the HTML TableRow after the JSON is loaded
+     */
     myTableDataTable = $('#myTable').DataTable({
         "ajax": {
             "url": "/Home/GetContainers",
@@ -58,10 +80,9 @@ $(function () {
 
         $.ajax({
             type: "POST",
-            dataType: "json",
-            contentType: "application/json",
             url: '/Home/PostCreateContainer',
-            data: JSON.stringify(containerData),
+            data: containerData,
+            dataType: 'json',
             statusCode: {
                 201: function () {
                     $('.alert').text("Created container: " + containerName);
@@ -105,12 +126,11 @@ function getNumberOfNodes() {
 
 function moveOrScale(currentObject, command) {
     var rowData = myTableDataTable.row(currentObject.parents('tr')).data();
-    var id = rowData[0];
+    var id = rowData.Id;
 
     $('#moveContainerModal').modal('show');
     $('#moveContainerId').val(id);
     $('#moveContainer').val(command);
-
 }
 
 function postMoveOrScaleContainer(id, node, method) {
@@ -130,7 +150,7 @@ function startRequest(currentObject, command) {
     $.ajax({
         type: 'POST',
         url: '/Home/PostAction',
-        data: { actionName: command, id: rowData.Id},
+        data: { actionName: command, id: rowData.Id },
         dataType: 'json',
         statusCode: {
             201: function () {
@@ -139,9 +159,6 @@ function startRequest(currentObject, command) {
             503: function () {
                 parentTableRow.css("background-color", "red");
             }
-        },
-        success: function (data) {
-            console.log("data: " + data);
         }
     });
 

@@ -70,19 +70,14 @@
         /// <returns>Created, true of false</returns>
         public bool CreateNewContainer(string containerName, string node, string baseImage, string hostPort, string containerPort)
         {
-            //TODO: Fix JSON POST.
+            object jsonObject = new { baseImage, containerName, containerPort, hostPort, node};
 
-            string url = baseUrl + "/containers/";
-            Uri apiUri = new Uri(url);
-            int result = HttpUtils.GetHttpWebResponseCode(apiUri);
-
-            if (result >= 200 && result < 300)
+            if (jsonObject.Equals(null))
             {
-                return true;
+                return false;
             }
 
-            LogWriter.Instance.LogMessage("Could not create a new container.");
-            return false;
+            return HttpUtils.PostJsonObjectAtUri(new Uri("http://145.24.222.227:8080/ictlab/api/containers"), jsonObject);
         }
 
         private List<DockerContainer> InitContainers()
@@ -118,6 +113,5 @@
         {
             Nodes = nodes;
         }
-
     }
 }

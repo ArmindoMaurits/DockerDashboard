@@ -36,26 +36,29 @@
             return responseData;
         }
 
-        public static int PostJsonAtUri(Uri uri)
+        /// <summary>
+        /// Posts a JSON Object to a given URI
+        /// </summary>
+        /// <param name="uri">URI of the target API page</param>
+        /// <param name="jsonObject">JSON object, as key:value pairs</param>
+        public static bool PostJsonObjectAtUri(Uri uri, object jsonObject)
         {
-            int responseCode;
-
             try
             {
-                WebRequest webRequest = WebRequest.Create(uri);
-                webRequest.Credentials = CredentialCache.DefaultCredentials;
-                webRequest.Method = "POST";
-                webRequest.ContentType = "json";
+                using (WebClient webClient = new WebClient())
+                {
+                    var dataString = Newtonsoft.Json.JsonConvert.SerializeObject(jsonObject);
 
+                    webClient.Headers.Add(HttpRequestHeader.ContentType, "application/json");
+                    webClient.UploadString(uri, "POST", dataString);
+                }
+                return true;
             }
             catch (Exception)
             {
-
-                throw;
+                LogWriter.Instance.LogMessage("Could not post JSON object:" + jsonObject.ToString() + " at URI: " + uri);
+                return false;
             }
-
-
-            return responseCode;
         }
 
         /// <summary>

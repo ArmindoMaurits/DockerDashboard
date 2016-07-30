@@ -9,6 +9,7 @@
     {
         readonly DockerClient dockerClient = new DockerClient();
 
+        [HttpGet]
         public IActionResult Index()
         {
             return View();
@@ -52,10 +53,15 @@
         {
             bool created = dockerClient.CreateNewContainer(containerName, node, baseImage, hostPort, containerPort);
 
-            Response.StatusCode = (int)System.Net.HttpStatusCode.Created;
-            return Json("Container created.");
-        }
+            if (created)
+            {
+                Response.StatusCode = (int)System.Net.HttpStatusCode.Created;
+                return Json("Container created.");
+            }
 
+            Response.StatusCode = (int)System.Net.HttpStatusCode.ServiceUnavailable;
+            return Json("Container could not be created.");
+        }
 
         /// <summary>
         /// Start a specific action on a Container by given container ID.
