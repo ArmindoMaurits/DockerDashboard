@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 
 namespace DockerTestAma.Models
 {
@@ -46,7 +47,7 @@ namespace DockerTestAma.Models
         /// <param name="message">Message that has to be logged</param>
         public void LogMessage(string message)
         {
-            Debug.WriteLine(message);
+            Debug.WriteLine(DateTime.Now.ToString("dd/MM/yyyy h:mm:ss tt") + "  :   " + message);
             // TODO: Log here
         }
     }

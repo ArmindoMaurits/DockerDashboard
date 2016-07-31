@@ -31,7 +31,7 @@
             }
             catch (WebException webException)
             {
-                LogWriter.Instance.LogMessage("Could not get webURL: " + GetWebResponseCode((HttpWebResponse)webException.Response));
+                LogWriter.Instance.LogMessage("Could not get JSON from uri: " + uri + " : " + webException);
             }
             return responseData;
         }
@@ -56,7 +56,7 @@
             }
             catch (Exception)
             {
-                LogWriter.Instance.LogMessage("Could not post JSON object:" + jsonObject.ToString() + " at URI: " + uri);
+                LogWriter.Instance.LogMessage("Could not post JSON object:" + jsonObject.ToString() + " to URI: " + uri);
                 return false;
             }
         }
@@ -85,9 +85,9 @@
                 HttpWebResponse response = (HttpWebResponse)webRequest.GetResponse();
                 responseCode = GetWebResponseCode(response);
             }
-            catch (WebException we)
+            catch (WebException webException)
             {
-                LogWriter.Instance.LogMessage("Could not get webURL: " + GetWebResponseCode((HttpWebResponse)we.Response));
+                LogWriter.Instance.LogMessage("Could not get response from: " + uri + " : " + webException);
             }
             return responseCode;
         }

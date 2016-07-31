@@ -19,6 +19,7 @@
         public JsonResult GetContainers()
         {
             Response.StatusCode = (int)System.Net.HttpStatusCode.Created;
+
             return Json(dockerClient.GetContainers());
         }
 
@@ -26,6 +27,7 @@
         public JsonResult GetNodes()
         {
             Response.StatusCode = (int)System.Net.HttpStatusCode.Created;
+
             return Json(dockerClient.GetNodes());
         }
 
