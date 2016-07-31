@@ -8,7 +8,10 @@
     {
         private List<DockerContainer> Containers;
         private List<string> Nodes;
-        private readonly string baseUrl = "http://145.24.222.227:8080/ictlab/api";
+        /// <summary>
+        /// Environment variable used so that the Docker dashboard API address can be got. Docker containers can use this, so we can use different addresses.
+        /// </summary>
+        private readonly string baseUrl = Environment.GetEnvironmentVariable("DockerDashboardApiAddress");
 
         /// <summary>
         /// Initialze a new DockerClient, also gets all containers
@@ -80,6 +83,10 @@
             return HttpUtils.PostJsonObjectAtUri(new Uri("http://145.24.222.227:8080/ictlab/api/containers"), jsonObject);
         }
 
+        /// <summary>
+        /// Initialize our List of Docker Containers from our Front-end API.
+        /// </summary>
+        /// <returns>Returns a list of Docker Containers</returns>
         private List<DockerContainer> InitContainers()
         {
             List<DockerContainer> containerList;
@@ -92,6 +99,10 @@
             return containerList;
         }
 
+        /// <summary>
+        /// Initializes a List of strings (docker node IP-addresses) from our Front-end API.
+        /// </summary>
+        /// <returns>A list of string IP-addresses</returns>
         private List<string> InitNodes()
         {
             List<string> nodesList;
@@ -104,11 +115,19 @@
             return nodesList;
         }
 
+        /// <summary>
+        /// Sets our Containers variable with given list of DockerContainers
+        /// </summary>
+        /// <param name="containers">A list of Docker Containers</param>
         private void SetContainers(List<DockerContainer> containers)
         {
             Containers = containers;
         }
 
+        /// <summary>
+        /// Sets our Nodes variable with given list of strings (IP-addresses).
+        /// </summary>
+        /// <param name="nodes">A list of strings (IP-addresses)</param>
         private void SetNodes(List<string> nodes)
         {
             Nodes = nodes;

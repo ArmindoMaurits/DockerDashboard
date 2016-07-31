@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CodeSnippets
+    xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">
+  <CodeSnippet Format="1.0.0">
+    <Header>
+      <Title>LogWriter message logging</Title>
+      <Author>Armindo Maurits</Author>
+      <Shortcut>LogMsg</Shortcut>
+      <Description>Logs a message to the file system by LogWriter class.</Description>
+    </Header>
+    <Snippet>
+      <Declarations>
+        <Literal>
+          <ID>LogMessageString</ID>
+          <ToolTip>Replace with a string message to log.</ToolTip>
+          <Default>"Log message string"</Default>
+        </Literal>
+      </Declarations>
+      <Code Language="CSharp">
+        <![CDATA[LogWriter.Instance.LogMessage("$LogMessageString$");]]>
+      </Code>
+    </Snippet>
+  </CodeSnippet>
+</CodeSnippets>

@@ -32,20 +32,25 @@
         [HttpPost]
         public JsonResult PostAction(string actionName, int id)
         {
+            bool startedAction = false;
+
             try
             {
-                StartAction(id, actionName);
+                startedAction = StartAction(id, actionName);
+
+                if (startedAction)
+                {
+                    Response.StatusCode = (int)System.Net.HttpStatusCode.Created;
+                    return Json("Action excecuted.");
+                }
             }
             catch (NullReferenceException e)
             {
-                LogWriter.Instance.LogMessage("Action " + actionName + " not executed: " + e);
-
-                Response.StatusCode = (int)System.Net.HttpStatusCode.ServiceUnavailable;
-                return Json("Action not executed: " + e);
+                LogWriter.Instance.LogMessage("Action " + actionName + " not executed on container with ID: " + id+ " Error:" + e);
             }
 
-            Response.StatusCode = (int)System.Net.HttpStatusCode.Created;
-            return Json("Action excecuted.");
+            Response.StatusCode = (int)System.Net.HttpStatusCode.ServiceUnavailable;
+            return Json("Action not executed");
         }
 
         [HttpPost]
@@ -67,7 +72,7 @@
         /// Start a specific action on a Container by given container ID.
         /// </summary>
         /// <returns>Returns if the action is executed successfully.</returns>
-        public bool StartAction(int id, string action)
+        private bool StartAction(int id, string action)
         {
             return dockerClient.StartAction(id, action);
         }
