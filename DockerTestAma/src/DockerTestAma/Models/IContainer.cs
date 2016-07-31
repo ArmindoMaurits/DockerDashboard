@@ -5,7 +5,7 @@
     /// </summary>
     public interface IContainer
     {
-        int? Id { get;set; }
+        int? Id { get; set; }
         string Name { get; set; }
     }
 }

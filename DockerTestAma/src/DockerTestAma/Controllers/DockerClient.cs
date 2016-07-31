@@ -4,17 +4,28 @@
     using System.Collections.Generic;
     using Models;
 
+    /// <summary>
+    /// Client which handles Docker tasks and acts as a business logic level between a controller and a Docker Dashboard API.
+    /// </summary>
     public class DockerClient
     {
-        private List<DockerContainer> Containers;
-        private List<string> Nodes;
         /// <summary>
         /// Environment variable used so that the Docker dashboard API address can be got. Docker containers can use this, so we can use different addresses.
         /// </summary>
         private readonly string baseUrl = Environment.GetEnvironmentVariable("DockerDashboardApiAddress");
 
         /// <summary>
-        /// Initialze a new DockerClient, also gets all containers
+        /// The total list of Docker containers
+        /// </summary>
+        private List<DockerContainer> containers;
+
+        /// <summary>
+        /// The total list of Docker node IP-addresses
+        /// </summary>
+        private List<string> nodes;
+
+        /// <summary>
+        /// Initializes a new instance of the DockerClient, also gets all containers
         /// </summary>
         public DockerClient()
         {
@@ -28,7 +39,7 @@
         /// <returns>A list of Docker Containers</returns>
         public List<DockerContainer> GetContainers()
         {
-            return Containers;
+            return containers;
         }
 
         /// <summary>
@@ -37,7 +48,7 @@
         /// <returns>A list of Docker Node IP-adresses</returns>
         public List<string> GetNodes()
         {
-            return Nodes;
+            return nodes;
         }
 
         /// <summary>
@@ -61,7 +72,7 @@
             }
             catch (NullReferenceException)
             {
-                LogWriter.Instance.LogMessage("Could not "+ action +" container: " + id);
+                LogWriter.Instance.LogMessage("Could not " + action + " container: " + id);
             }
 
             return false;
@@ -73,7 +84,7 @@
         /// <returns>Created, true of false</returns>
         public bool CreateNewContainer(string containerName, string node, string baseImage, string hostPort, string containerPort)
         {
-            object jsonObject = new { baseImage, containerName, containerPort, hostPort, node};
+            object jsonObject = new { baseImage, containerName, containerPort, hostPort, node };
 
             if (jsonObject.Equals(null))
             {
@@ -121,7 +132,7 @@
         /// <param name="containers">A list of Docker Containers</param>
         private void SetContainers(List<DockerContainer> containers)
         {
-            Containers = containers;
+            this.containers = containers;
         }
 
         /// <summary>
@@ -130,7 +141,7 @@
         /// <param name="nodes">A list of strings (IP-addresses)</param>
         private void SetNodes(List<string> nodes)
         {
-            Nodes = nodes;
+            this.nodes = nodes;
         }
     }
 }

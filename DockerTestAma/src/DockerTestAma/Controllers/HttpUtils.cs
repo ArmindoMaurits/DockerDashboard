@@ -33,6 +33,7 @@
             {
                 LogWriter.Instance.LogMessage("Could not get JSON from uri: " + uri + " : " + webException);
             }
+
             return responseData;
         }
 
@@ -41,6 +42,7 @@
         /// </summary>
         /// <param name="uri">URI of the target API page</param>
         /// <param name="jsonObject">JSON object, as key:value pairs</param>
+        /// <returns>True or false, if the object has been posted succesfully.</returns>
         public static bool PostJsonObjectAtUri(Uri uri, object jsonObject)
         {
             try
@@ -62,20 +64,10 @@
         }
 
         /// <summary>
-        /// Parses the webresponse and returns the StatusCode of the response.
-        /// </summary>
-        /// <param name="httpWebResponse">Our HttpWebReponse</param>
-        /// <returns>Statuscode of the HttpWebReponse</returns>
-        private static int GetWebResponseCode(HttpWebResponse httpWebResponse)
-        {
-            return (int)httpWebResponse.StatusCode;
-        }
-
-        /// <summary>
         /// Gets the response code of a given URI
         /// </summary>
         /// <param name="uri">Desired URI location of a webpage</param>
-        /// <returns>The webresponse</returns>
+        /// <returns>The webResponseCode</returns>
         public static int GetHttpWebResponseCode(Uri uri)
         {
             int responseCode = 0;
@@ -90,6 +82,16 @@
                 LogWriter.Instance.LogMessage("Could not get response from: " + uri + " : " + webException);
             }
             return responseCode;
+        }
+
+        /// <summary>
+        /// Parses the webresponse and returns the StatusCode of the response.
+        /// </summary>
+        /// <param name="httpWebResponse">Our HttpWebResponse</param>
+        /// <returns>Statuscode of the HttpWebResponse</returns>
+        private static int GetWebResponseCode(HttpWebResponse httpWebResponse)
+        {
+            return (int)httpWebResponse.StatusCode;
         }
 
     }

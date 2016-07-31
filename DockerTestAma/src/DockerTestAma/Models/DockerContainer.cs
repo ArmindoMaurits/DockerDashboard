@@ -15,7 +15,8 @@
         private int? id;
         private string name;
 
-        public int? Id {
+        public int? Id
+        {
             get
             {
                 return id;
@@ -27,7 +28,8 @@
             }
         }
 
-        public string Name {
+        public string Name
+        {
             get
             {
                 return name;
