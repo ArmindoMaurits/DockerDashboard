@@ -25,7 +25,7 @@
         private List<string> nodes;
 
         /// <summary>
-        /// Initializes a new instance of the DockerClient, also gets all containers
+        /// Initializes a new instance of the DockerClient, also initializes all containers and nodes.
         /// </summary>
         public DockerClient()
         {
@@ -56,6 +56,7 @@
         /// </summary>
         /// <param name="id">ID of the Container that needs to get the action used on</param>
         /// <param name="action">The action that needs to be invoked on an container.</param>
+        /// <example>StartAction(60, "start")</example>
         /// <returns>Excecuted action, true of false</returns>
         public bool StartAction(int id, string action)
         {

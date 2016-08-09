@@ -42,7 +42,7 @@ namespace DockerTestAma.Models
         }
 
         /// <summary>
-        /// Log a message to the filesystem
+        /// Log a message to the Debug command line
         /// </summary>
         /// <param name="message">Message that has to be logged</param>
         public void LogMessage(string message)
