@@ -1,8 +1,8 @@
-﻿//
-/**
- * @version 1.0.0
- * @since 10-06-2016
- * JS for our Docker dashboard
+﻿/**
+ * @version 2.0.0
+ * @since 09-08-2016
+ * @author Armindo Maurits
+ * JS for our Docker Dashboard
  */
 
 /**
@@ -20,7 +20,7 @@ var myTableDataTable;
  * @type {string}
  */
 const host = "http://145.24.222.227:8080/ictlab/api";
-
+var alertDiv = $('.alert');
 
 $(function () {
     /**
@@ -57,6 +57,9 @@ $(function () {
         }
     });
 
+    /**
+    * Show our model when the newContainer button is clicked.
+    */
     $('#newContainer').click(function () {
         $('#newContainerModal').modal('show');
     });
@@ -64,7 +67,7 @@ $(function () {
     /**
      * Start a new container create request with filled in details
      */
-    $('#startNewContainer').click(function () {
+    $('#startNewContainer').click(function () {      
         var containerName = $('#newContainerName').val();
         var node = $('#startingNode option:selected').text();
         var baseImage = $('#newContainerBaseImage').val();
@@ -85,17 +88,21 @@ $(function () {
             dataType: 'json',
             statusCode: {
                 201: function () {
-                    $('.alert').text("Created container: " + containerName);
+                    showWarningMessage("Created container: " + containerName);
+
                     reloadDataTable(3000);
                 },
-                503: function () {
-                    $('.alert').text("Could not create container: " + containerName);
+                503: function (data) {
+                    showWarningMessage("Could not create container: " + containerName);
                 }
             }
         });
 
     });
 
+    /**
+    * Pass through the given Node, id and method when the moveContainer button is clicked.
+    */
     $('#moveContainer').click(function () {
         var node = $('#moveContainerNodes option:selected').text();
         var id = $('#moveContainerId').val();
@@ -107,10 +114,17 @@ $(function () {
     getNumberOfNodes();
 })
 
+/**
+* Adds a node to the HTML DOM element lists. So these Node IP-addresses can be selected on the Modal.
+* @param value - The IP-address to be added to the dropdown lists.
+*/
 function addNode(value) {
     $('#startingNode, #moveContainerNodes').append($('<option>').text(value).attr('value', value));
 }
 
+/**
+* Gets the number of nodes from the Controller by JSON GET request and passes these individual IP-addresses to the addNode function to render them on screen.
+*/
 function getNumberOfNodes() {
     $.ajax({
         url: '/Home/GetNodes',
@@ -124,6 +138,9 @@ function getNumberOfNodes() {
     });
 }
 
+/**
+* Shows the moveContainerModal and fills in the ID and clicked command.
+*/
 function moveOrScale(currentObject, command) {
     var rowData = myTableDataTable.row(currentObject.parents('tr')).data();
     var id = rowData.Id;
@@ -133,6 +150,12 @@ function moveOrScale(currentObject, command) {
     $('#moveContainer').val(command);
 }
 
+/**
+* Gets a JSON at given URL. This causes the given container to be moved or scaled to given Docker Node.
+* @param {number} id - ID of the desired Docker Container, which has to be moved/scaled.
+* @param {string} node - Target Docker Node IP-address.
+* @param {string} method - Move or scale.
+*/
 function postMoveOrScaleContainer(id, node, method) {
     var url = host + "/containers/" + id + "/" + method + "/" + node;
 
@@ -143,6 +166,11 @@ function postMoveOrScaleContainer(id, node, method) {
     });
 }
 
+/**
+* Start a request on given container and afterwards changes the background color of this row by given result status.
+* @param {object} currentObject - Table row Object which is clicked.
+* @param {string} command - The command which has the be executed on this Container. Can be "start", "stop", "restart", "delete".
+*/
 function startRequest(currentObject, command) {
     var parentTableRow = currentObject.parents('tr');
     var rowData = myTableDataTable.row(parentTableRow).data();
@@ -154,9 +182,13 @@ function startRequest(currentObject, command) {
         dataType: 'json',
         statusCode: {
             201: function () {
+                showWarningMessage(command + " container " + rowData.Id);
+
                 parentTableRow.css("background-color", "green");
             },
             503: function () {
+                showWarningMessage("Could not " + command + " container: " + rowData.Id);
+
                 parentTableRow.css("background-color", "red");
             }
         }
@@ -166,11 +198,20 @@ function startRequest(currentObject, command) {
 }
 
 /**
- * Reload the datatable after given milliseconds
- * @param {number} ms
+ * Reload the datatable after given milliseconds.
+ * @param {number} ms - number of milliseconds.
  */
 function reloadDataTable(ms) {
     setTimeout(function () {
         myTableDataTable.ajax.reload();
     }, ms);
+}
+
+/**
+* Shows the information panel at the top of the screen when a message needs to be shown.
+* @param {string} messageText - The information message which needs to be shown to the user.
+*/
+function showWarningMessage(messageText) {
+    $('.alert').text(messageText);
+    $('.alert').show();
 }

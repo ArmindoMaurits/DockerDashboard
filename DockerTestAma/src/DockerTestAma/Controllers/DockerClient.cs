@@ -5,7 +5,7 @@
     using Models;
 
     /// <summary>
-    /// Client which handles Docker tasks and acts as a business logic level between a controller and a Docker Dashboard API.
+    /// Client which handles Docker tasks and acts as a business logic level between a controller and the Docker Dashboard API.
     /// </summary>
     public class DockerClient
     {

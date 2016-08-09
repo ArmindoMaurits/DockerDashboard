@@ -64,10 +64,10 @@
         }
 
         /// <summary>
-        /// Gets the response code of a given URI
+        /// Gets the response code of a given URI.
         /// </summary>
-        /// <param name="uri">Desired URI location of a webpage</param>
-        /// <returns>The webResponseCode</returns>
+        /// <param name="uri">Desired URI location of a webpage.</param>
+        /// <returns>The webResponseCode.</returns>
         public static int GetHttpWebResponseCode(Uri uri)
         {
             int responseCode = 0;
@@ -93,6 +93,5 @@
         {
             return (int)httpWebResponse.StatusCode;
         }
-
     }
 }

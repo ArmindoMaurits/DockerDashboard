@@ -48,7 +48,6 @@ namespace DockerTestAma.Models
         public void LogMessage(string message)
         {
             Debug.WriteLine(DateTime.Now.ToString("dd/MM/yyyy h:mm:ss tt") + "  :   " + message);
-            // TODO: Log here
         }
     }
 }

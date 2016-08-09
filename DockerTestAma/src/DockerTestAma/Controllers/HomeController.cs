@@ -40,7 +40,7 @@
 
         [HttpPost]
         /// <summary>
-        /// Post an action to a specific container, by given action and target container ID. Can be 
+        /// Post an action to a specific container, by given action and target container ID.
         /// </summary>
         /// <param name="actionName">Name of the action, like "start", "stop", "restart", "delete".</param>
         /// <param name="id">ID of the target container where the action needs be performed on.</param>
@@ -68,7 +68,6 @@
             Response.StatusCode = (int)System.Net.HttpStatusCode.ServiceUnavailable;
             return Json("Action not executed");
         }
-
 
         [HttpPost]
         /// <summary>
