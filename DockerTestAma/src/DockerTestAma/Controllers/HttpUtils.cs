@@ -56,9 +56,9 @@
                 }
                 return true;
             }
-            catch (Exception)
+            catch (WebException e)
             {
-                LogWriter.Instance.LogMessage("Could not post JSON object:" + jsonObject.ToString() + " to URI: " + uri);
+                LogWriter.Instance.LogMessage("Could not post JSON object:" + jsonObject.ToString() + " to URI: " + uri + " error: " + e);
                 return false;
             }
         }

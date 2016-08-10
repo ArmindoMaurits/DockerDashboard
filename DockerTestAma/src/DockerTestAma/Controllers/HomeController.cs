@@ -46,9 +46,14 @@
         /// <param name="id">ID of the target container where the action needs be performed on.</param>
         /// <returns>JSON return result and 201 or 503 HTTPStatusCode</returns>
         /// <example>PostAction("start", 60)</example>
-        public JsonResult PostAction(string actionName, int id)
+        public JsonResult PostAction(string actionName, int? id)
         {
             bool startedAction = false;
+
+            if (id == null || actionName == null)
+            {
+                throw new ArgumentException("Could not " + actionName + " container " + id);
+            }
 
             try
             {

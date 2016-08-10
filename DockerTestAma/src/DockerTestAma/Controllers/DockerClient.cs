@@ -12,16 +12,8 @@
         /// <summary>
         /// Environment variable used so that the Docker dashboard API address can be got. Docker containers can use this, so we can use different addresses.
         /// </summary>
-        private readonly string baseUrl = Environment.GetEnvironmentVariable("DockerDashboardApiAddress");
-
-        /// <summary>
-        /// The total list of Docker containers
-        /// </summary>
+        private static readonly string baseUrl = Environment.GetEnvironmentVariable("DockerDashboardApiAddress");
         private List<DockerContainer> containers;
-
-        /// <summary>
-        /// The total list of Docker node IP-addresses
-        /// </summary>
         private List<string> nodes;
 
         /// <summary>
@@ -33,10 +25,6 @@
             SetNodes(InitNodes());
         }
 
-        /// <summary>
-        /// Gets a list of Docker Containers
-        /// </summary>
-        /// <returns>A list of Docker Containers</returns>
         public List<DockerContainer> GetContainers()
         {
             return containers;
@@ -49,34 +37,6 @@
         public List<string> GetNodes()
         {
             return nodes;
-        }
-
-        /// <summary>
-        /// Start a given action on Container by given ID
-        /// </summary>
-        /// <param name="id">ID of the Container that needs to get the action used on</param>
-        /// <param name="action">The action that needs to be invoked on an container.</param>
-        /// <example>StartAction(60, "start")</example>
-        /// <returns>Excecuted action, true of false</returns>
-        public bool StartAction(int id, string action)
-        {
-            try
-            {
-                string url = baseUrl + "/containers/" + id + "/" + action;
-                Uri apiUri = new Uri(url);
-                int result = HttpUtils.GetHttpWebResponseCode(apiUri);
-
-                if (result >= 200 && result < 300)
-                {
-                    return true;
-                }
-            }
-            catch (NullReferenceException)
-            {
-                LogWriter.Instance.LogMessage("Could not " + action + " container: " + id);
-            }
-
-            return false;
         }
 
         /// <summary>
@@ -93,6 +53,39 @@
             }
 
             return HttpUtils.PostJsonObjectAtUri(new Uri("http://145.24.222.227:8080/ictlab/api/containers"), jsonObject);
+        }
+
+        /// <summary>
+        /// Start a given action on Container by given ID
+        /// </summary>
+        /// <param name="id">ID of the Container that needs to get the action used on</param>
+        /// <param name="action">The action that needs to be invoked on an container.</param>
+        /// <example>StartAction(60, "start")</example>
+        /// <returns>Excecuted action, true of false</returns>
+        public bool StartAction(int? id, string action)
+        {
+            if (id == null || action == null)
+            {
+                throw new ArgumentException("Could not " + action + " container " + id);
+            }
+
+            try
+            {
+                string url = baseUrl + "/containers/" + id + "/" + action;
+                Uri apiUri = new Uri(url);
+                int result = HttpUtils.GetHttpWebResponseCode(apiUri);
+
+                if (result >= 200 && result < 300)
+                {
+                    return true;
+                }
+            }
+            catch (NullReferenceException e)
+            {
+                LogWriter.Instance.LogMessage("Could not " + action + " container " + id + ", because of: " + e);
+            }
+
+            return false;
         }
 
         /// <summary>

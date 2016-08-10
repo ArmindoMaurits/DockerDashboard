@@ -44,7 +44,7 @@
                     nodes.Add( (string)jsonObject.name);
                 }
             }
-            catch (System.Exception e)
+            catch (JsonSerializationException e)
             {
                 LogWriter.Instance.LogMessage("Cannot get node IP adresses from response: " + e);
             }
