@@ -7,7 +7,7 @@
 
     public class HomeController : Controller
     {
-        private readonly DockerClient dockerClient = new DockerClient();
+        readonly DockerClient dockerClient = new DockerClient();
 
         public IActionResult Index()
         {
@@ -57,7 +57,7 @@
 
             try
             {
-                startedAction = StartAction(id, actionName);
+                startedAction = dockerClient.StartAction(id, actionName);
 
                 if (startedAction)
                 {
@@ -96,15 +96,6 @@
 
             Response.StatusCode = (int)System.Net.HttpStatusCode.ServiceUnavailable;
             return Json("Container could not be created.");
-        }
-
-        /// <summary>
-        /// Starts a specific action on a Container by given container ID.
-        /// </summary>
-        /// <returns>Returns if the action is executed successfully.</returns>
-        private bool StartAction(int id, string action)
-        {
-            return dockerClient.StartAction(id, action);
         }
     }
 }

@@ -11,10 +11,11 @@
     {
         /// <summary>
         /// Environment variable used so that the Docker dashboard API address can be got. Docker containers can use this, so we can use different addresses.
+        /// <example>http://145.24.222.227:8080/ictlab/api</example>
         /// </summary>
-        private static readonly string baseUrl = Environment.GetEnvironmentVariable("DockerDashboardApiAddress");
-        private List<DockerContainer> containers;
-        private List<string> nodes;
+        static readonly string baseUrl = Environment.GetEnvironmentVariable("DockerDashboardApiAddress");
+        List<DockerContainer> containers;
+        List<string> nodes;
 
         /// <summary>
         /// Initializes a new instance of the DockerClient, also initializes all containers and nodes.
@@ -92,7 +93,7 @@
         /// Initialize our List of Docker Containers from our Front-end API.
         /// </summary>
         /// <returns>Returns a list of Docker Containers</returns>
-        private List<DockerContainer> InitContainers()
+        List<DockerContainer> InitContainers()
         {
             List<DockerContainer> containerList;
             string url = baseUrl + "/containers/";
@@ -108,7 +109,7 @@
         /// Initializes a List of strings (docker node IP-addresses) from our Front-end API.
         /// </summary>
         /// <returns>A list of string IP-addresses</returns>
-        private List<string> InitNodes()
+        List<string> InitNodes()
         {
             List<string> nodesList;
             string url = baseUrl + "/nodes/";
@@ -124,7 +125,7 @@
         /// Sets our Containers variable with given list of DockerContainers
         /// </summary>
         /// <param name="containers">A list of Docker Containers</param>
-        private void SetContainers(List<DockerContainer> containers)
+        void SetContainers(List<DockerContainer> containers)
         {
             this.containers = containers;
         }
@@ -133,7 +134,7 @@
         /// Sets our Nodes variable with given list of strings (IP-addresses).
         /// </summary>
         /// <param name="nodes">A list of strings (IP-addresses)</param>
-        private void SetNodes(List<string> nodes)
+        void SetNodes(List<string> nodes)
         {
             this.nodes = nodes;
         }

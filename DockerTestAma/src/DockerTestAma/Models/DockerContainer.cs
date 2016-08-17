@@ -12,8 +12,8 @@
     public class DockerContainer : IContainer
     {
         //ID is a nullable type, shorthand for Nullable<int>. So we can put it on our Contract.
-        private int? id;
-        private string name;
+        int? id;
+        string name;
 
         public int? Id
         {

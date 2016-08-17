@@ -10,13 +10,13 @@ namespace DockerTestAma.Models
     /// </summary>
     public sealed class LogWriter
     {
-        private static volatile LogWriter instance;
-        private static object syncRoot = new object();
+        static volatile LogWriter instance;
+        static object syncRoot = new object();
 
         /// <summary>
         /// Constructor of the LogWriter, created a single DataBaseTools
         /// </summary>
-        private LogWriter()
+        LogWriter()
         {
         }
 
