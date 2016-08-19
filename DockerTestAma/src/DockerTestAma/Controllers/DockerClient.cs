@@ -11,12 +11,13 @@
     {
         /// <summary>
         /// Environment variable used so that the Docker dashboard API address can be got. Docker containers can use this, so we can use different addresses.
+        /// Will only be assigned at declaration.
         /// <example>http://145.24.222.227:8080/ictlab/api</example>
         /// </summary>
         static readonly string baseUrl = Environment.GetEnvironmentVariable("DockerDashboardApiAddress");
         List<DockerContainer> containers;
         List<string> nodes;
-
+        
         /// <summary>
         /// Initializes a new instance of the DockerClient, also initializes all containers and nodes.
         /// </summary>
